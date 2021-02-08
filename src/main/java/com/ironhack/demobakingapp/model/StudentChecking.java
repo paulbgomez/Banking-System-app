@@ -4,12 +4,12 @@ import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.enums.Status;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 public class StudentChecking extends Account{
 
+    @Enumerated(EnumType.STRING)
     protected Status status;
     protected String secretKey;
 
@@ -21,8 +21,8 @@ public class StudentChecking extends Account{
         this.secretKey = secretKey;
     }
 
-    public StudentChecking(Money balanceAmount, Money penaltyAmount, AccountHolder primaryOwner, AccountHolder secondaryOwner, List<Transference> sentTransference, List<Transference> receivedTransference, Status status, String secretKey) {
-        super(balanceAmount, penaltyAmount, primaryOwner, secondaryOwner, sentTransference, receivedTransference);
+    public StudentChecking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Status status, String secretKey) {
+        super(balance, primaryOwner, secondaryOwner);
         this.status = status;
         this.secretKey = secretKey;
     }

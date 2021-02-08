@@ -1,29 +1,38 @@
 package com.ironhack.demobakingapp.model;
 
 import com.ironhack.demobakingapp.classes.Money;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Repository
+@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    protected Money balanceAmount;
-    protected Money penaltyAmount;
+    @Embedded
+    @AttributeOverrides(value ={
+            @AttributeOverride(name = "amount", column = @Column(name = "balance_amount")),
+            @AttributeOverride(name = "currency", column = @Column(name = "balance_currency"))
+    })
+    protected Money balance;
+    @Embedded
+    @AttributeOverrides(value ={
+            @AttributeOverride(name = "amount", column = @Column(name = "penalty_fee_amount")),
+            @AttributeOverride(name = "currency", column = @Column(name = "penalty_fee_currency"))
+    })
+    protected final Money penalty = new Money(new BigDecimal(40));
     @ManyToOne(optional = false)
     protected AccountHolder primaryOwner;
     @ManyToOne(optional = true)
     protected AccountHolder secondaryOwner; //This is optional
 
-    @OneToMany(mappedBy = "originAccount")
-    protected List<Transference> sentTransference;
-    @OneToMany(mappedBy = "destinationAccount")
-    protected List<Transference> receivedTransference;
+    @OneToMany(mappedBy = "senderAccount")
+    protected List<Movement> sentMoney;
+    @OneToMany(mappedBy = "receiverAccount")
+    protected List<Movement> receivedMoney;
 
     /**
      * Constructors
@@ -31,16 +40,13 @@ public abstract class Account {
     public Account() {
     }
 
-    public Account(Money balanceAmount, Money penaltyAmount, AccountHolder primaryOwner, AccountHolder secondaryOwner, List<Transference> sentTransference, List<Transference> receivedTransference) {
-        this.balanceAmount = balanceAmount;
-        this.penaltyAmount = penaltyAmount;
+    public Account(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
+        this.balance = balance;
         this.primaryOwner = primaryOwner;
         this.secondaryOwner = secondaryOwner;
-        this.sentTransference = sentTransference;
-        this.receivedTransference = receivedTransference;
     }
 
-/**
+    /**
      * Getters & Setters
      **/
     public Long getId() {
@@ -51,20 +57,16 @@ public abstract class Account {
         this.id = id;
     }
 
-    public Money getBalanceAmount() {
-        return balanceAmount;
+    public Money getBalance() {
+        return balance;
     }
 
-    public void setBalanceAmount(Money balanceAmount) {
-        this.balanceAmount = balanceAmount;
+    public void setBalance(Money balance) {
+        this.balance = balance;
     }
 
-    public Money getPenaltyAmount() {
-        return penaltyAmount;
-    }
-
-    public void setPenaltyAmount(Money penaltyAmount) {
-        this.penaltyAmount = penaltyAmount;
+    public Money getPenalty() {
+        return penalty;
     }
 
     public AccountHolder getPrimaryOwner() {
@@ -83,20 +85,20 @@ public abstract class Account {
         this.secondaryOwner = secondaryOwner;
     }
 
-    public List<Transference> getSentTransference() {
-        return sentTransference;
+    public List<Movement> getSentMoney() {
+        return sentMoney;
     }
 
-    public void setSentTransference(List<Transference> sentTransference) {
-        this.sentTransference = sentTransference;
+    public void setSentMoney(List<Movement> sentMoney) {
+        this.sentMoney = sentMoney;
     }
 
-    public List<Transference> getReceivedTransference() {
-        return receivedTransference;
+    public List<Movement> getReceivedMoney() {
+        return receivedMoney;
     }
 
-    public void setReceivedTransference(List<Transference> receivedTransference) {
-        this.receivedTransference = receivedTransference;
+    public void setReceivedMoney(List<Movement> receivedMoney) {
+        this.receivedMoney = receivedMoney;
     }
 }
 

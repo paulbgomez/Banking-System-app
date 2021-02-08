@@ -8,16 +8,26 @@ public class Address {
     private String city;
     private String direction;
     private String state;
+    private String country;
     private String postalCode;
 
     public Address() {
     }
 
-    public Address(String city, String direction, String state, String postalCode) {
+    public Address(String city, String direction, String state, String country, String postalCode) {
         this.city = city;
         this.direction = direction;
         this.state = state;
+        this.country = country;
         this.postalCode = postalCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getCity() {

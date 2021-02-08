@@ -11,6 +11,11 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "id")
 public class CreditCard extends Account{
 
+    @Embedded
+    @AttributeOverrides(value ={
+            @AttributeOverride(name = "amount", column = @Column(name = "credit_limit_amount")),
+            @AttributeOverride(name = "currency", column = @Column(name = "credit_limit_currency"))
+    })
     private Money creditLimitAmount;
     private BigDecimal interestRate;
 
@@ -18,12 +23,6 @@ public class CreditCard extends Account{
     }
 
     public CreditCard(Money creditLimitAmount, BigDecimal interestRate) {
-        this.creditLimitAmount = creditLimitAmount;
-        this.interestRate = interestRate;
-    }
-
-    public CreditCard(Money balanceAmount, Money penaltyAmount, AccountHolder primaryOwner, AccountHolder secondaryOwner, List<Transference> sentTransference, List<Transference> receivedTransference, Money creditLimitAmount, BigDecimal interestRate) {
-        super(balanceAmount, penaltyAmount, primaryOwner, secondaryOwner, sentTransference, receivedTransference);
         this.creditLimitAmount = creditLimitAmount;
         this.interestRate = interestRate;
     }
