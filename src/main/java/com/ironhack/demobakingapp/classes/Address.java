@@ -11,9 +11,6 @@ public class Address {
     private String country;
     private String postalCode;
 
-    public Address() {
-    }
-
     public Address(String city, String direction, String state, String country, String postalCode) {
         this.city = city;
         this.direction = direction;

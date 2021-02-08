@@ -9,14 +9,18 @@ import com.ironhack.demobakingapp.classes.Address;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 public class AccountHolder extends User {
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
+//    @JsonDeserialize(using = LocalDateDeserializer.class)
+//    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
 
     @Embedded
@@ -45,13 +49,13 @@ public class AccountHolder extends User {
     public AccountHolder() {
     }
 
-    public AccountHolder(String name, String password, String userName, LocalDate birthDate, Address mailingAddress, Address primaryAddress, Set<Account> primaryAccounts, Set<Account> secondaryAccounts) {
+    public AccountHolder(String name, String password, String userName, LocalDate birthDate, Address mailingAddress, Address primaryAddress) {
         super(name, password, userName);
         this.birthDate = birthDate;
         this.mailingAddress = mailingAddress;
         this.primaryAddress = primaryAddress;
-        this.primaryAccounts = primaryAccounts;
-        this.secondaryAccounts = secondaryAccounts;
+        this.primaryAccounts = new HashSet<>();
+        this.secondaryAccounts = new HashSet<>();
     }
 
     public LocalDate getBirthDate() {
@@ -92,5 +96,12 @@ public class AccountHolder extends User {
 
     public void setSecondaryAccounts(Set<Account> secondaryAccounts) {
         this.secondaryAccounts = secondaryAccounts;
+    }
+
+    public Set<Account> accessAll(){
+        Set<Account> result = new HashSet<>();
+        this.primaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toSet());
+        this.secondaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toSet());
+        return result;
     }
 }

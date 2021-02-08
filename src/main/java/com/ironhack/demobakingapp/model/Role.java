@@ -10,7 +10,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private UserRole userRole;
 
     @ManyToOne //fetch?? de algun tipo?
     private User user;
@@ -18,8 +18,8 @@ public class Role {
     public Role() {
     }
 
-    public Role(String name, User user) {
-        this.name = name;
+    public Role(UserRole userRole, User user) {
+        this.userRole = userRole;
         this.user = user;
     }
 
@@ -31,12 +31,12 @@ public class Role {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
     public User getUser() {
