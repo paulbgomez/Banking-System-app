@@ -6,6 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ironhack.demobakingapp.classes.Address;
 import com.ironhack.demobakingapp.model.Account;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -37,6 +39,15 @@ public class AccountHolderDTO {
     @NotNull
     private String password;
 
+    public AccountHolderDTO(LocalDate birthDate, @NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull Address mailingAddress, @NotEmpty @NotNull Address primaryAddress, @NotEmpty @NotNull String password) {
+        this.birthDate = birthDate;
+        this.name = name;
+        this.username = username;
+        this.mailingAddress = mailingAddress;
+        this.primaryAddress = primaryAddress;
+        setPassword(password);
+    }
+
     public LocalDate getBirthDate() {
         return birthDate;
     }
@@ -66,7 +77,8 @@ public class AccountHolderDTO {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password);
     }
 
     public String getName() {

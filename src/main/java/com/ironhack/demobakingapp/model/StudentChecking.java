@@ -21,8 +21,8 @@ public class StudentChecking extends Account{
         this.secretKey = secretKey;
     }
 
-    public StudentChecking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Status status, String secretKey) {
-        super(balance, primaryOwner, secondaryOwner);
+    public StudentChecking(Money balance, AccountHolder primaryOwner, Status status, String secretKey) {
+        super(balance, primaryOwner);
         this.status = status;
         this.secretKey = secretKey;
     }

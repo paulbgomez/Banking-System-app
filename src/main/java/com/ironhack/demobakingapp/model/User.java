@@ -1,6 +1,9 @@
 package com.ironhack.demobakingapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -14,8 +17,9 @@ public class User {
     protected String password;
     protected String username;
 
-    @OneToMany(mappedBy = "user") //fetch?? cascade??
-    protected Set<Role> roles;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore//fetch?? cascade??
+    protected Set<Role> roles = new HashSet<>();
 
     public User() {
     }

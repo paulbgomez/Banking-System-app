@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @PrimaryKeyJoinColumn(name = "id")
 public class AccountHolder extends User {
 
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
 
     @Embedded

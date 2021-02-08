@@ -14,6 +14,9 @@ public class Money {
     private final Currency currency;
     private BigDecimal amount;
 
+    public Money() {currency = Currency.getInstance("USD");
+    }
+
     /**
      * Class constructor specifying amount, currency, and rounding
      **/

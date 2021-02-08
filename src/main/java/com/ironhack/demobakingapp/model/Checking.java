@@ -37,9 +37,9 @@ public class Checking extends StudentChecking{
     public Checking() {
     }
 
-    public Checking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Status status, String secretKey, boolean belowMinimumBalance, @PastOrPresent LocalDateTime lastFee) {
-        super(balance, primaryOwner, secondaryOwner, status, secretKey);
-        this.belowMinimumBalance = belowMinimumBalance;
+    public Checking(Money balance, AccountHolder primaryOwner, Status status, String secretKey, @PastOrPresent LocalDateTime lastFee) {
+        super(balance, primaryOwner, status, secretKey);
+        this.belowMinimumBalance = false;
         this.lastFee = lastFee;
     }
 

@@ -4,6 +4,7 @@ import com.ironhack.demobakingapp.classes.Money;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,8 @@ public abstract class Account {
     @ManyToOne(optional = true)
     protected AccountHolder secondaryOwner; //This is optional
 
+    protected LocalDateTime creationTime;
+
     @OneToMany(mappedBy = "senderAccount")
     protected List<Movement> sentMoney;
     @OneToMany(mappedBy = "receiverAccount")
@@ -40,10 +43,10 @@ public abstract class Account {
     public Account() {
     }
 
-    public Account(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
+    public Account(Money balance, AccountHolder primaryOwner) {
         this.balance = balance;
         this.primaryOwner = primaryOwner;
-        this.secondaryOwner = secondaryOwner;
+        this.creationTime = LocalDateTime.now();
     }
 
     /**

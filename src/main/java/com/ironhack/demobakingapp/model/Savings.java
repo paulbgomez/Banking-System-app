@@ -6,14 +6,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.enums.Status;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Repository
+@Entity
 @PrimaryKeyJoinColumn(name = "id") //este es el id de Account
 public class Savings extends Account{
 
@@ -36,13 +34,10 @@ public class Savings extends Account{
     public Savings() {
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Status status, Money monthlyMaintenanceFee, BigDecimal interestRate, LocalDateTime lastFee, boolean belowMinimumBalance, String secretKey) {
-        super(balance, primaryOwner, secondaryOwner);
+    public Savings(Money balance, AccountHolder primaryOwner, Status status, String secretKey) {
+        super(balance, primaryOwner);
         this.status = status;
-        this.monthlyMaintenanceFee = monthlyMaintenanceFee;
-        this.interestRate = interestRate;
-        this.lastFee = lastFee;
-        this.belowMinimumBalance = belowMinimumBalance;
+        this.belowMinimumBalance = false;
         this.secretKey = secretKey;
     }
 

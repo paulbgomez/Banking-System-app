@@ -36,11 +36,11 @@ public class Movement {
     public Movement() {
     }
 
-    public Movement(Account senderAccount, Account receiverAccount, Money quantity, LocalDateTime transferenceDate) {
+    public Movement(Account senderAccount, Account receiverAccount, Money quantity) {
         this.senderAccount = senderAccount;
         this.receiverAccount = receiverAccount;
         this.quantity = quantity;
-        this.transferenceDate = transferenceDate;
+        this.transferenceDate = LocalDateTime.now();
     }
 
     public Long getId() {
