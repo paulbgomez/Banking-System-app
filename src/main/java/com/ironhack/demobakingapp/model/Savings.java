@@ -12,18 +12,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "id") //este es el id de Account
+@PrimaryKeyJoinColumn(name = "id")
 public class Savings extends Account{
 
     @Enumerated(EnumType.STRING)
     private Status status;
     @Embedded
     @AttributeOverrides(value ={
-            @AttributeOverride(name = "amount", column = @Column(name = "monthly_maintenance_fee_amount")),
-            @AttributeOverride(name = "currency", column = @Column(name = "monthly_maintenance_fee_currency"))
+            @AttributeOverride(name = "amount", column = @Column(name = "minimum_balance_amount")),
+            @AttributeOverride(name = "currency", column = @Column(name = "minimum_balance_currency"))
     })
-    private Money monthlyMaintenanceFee;
-
+    private Money minimumBalance;
     private BigDecimal interestRate;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -49,12 +48,12 @@ public class Savings extends Account{
         this.status = status;
     }
 
-    public Money getMonthlyMaintenanceFee() {
-        return monthlyMaintenanceFee;
+    public Money getMinimumBalance() {
+        return minimumBalance;
     }
 
-    public void setMonthlyMaintenanceFee(Money monthlyMaintenanceFee) {
-        this.monthlyMaintenanceFee = monthlyMaintenanceFee;
+    public void setMinimumBalance(Money minimumBalance) {
+        this.minimumBalance = minimumBalance;
     }
 
     public BigDecimal getInterestRate() {

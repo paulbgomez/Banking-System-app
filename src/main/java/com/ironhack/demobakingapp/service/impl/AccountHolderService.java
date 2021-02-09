@@ -31,11 +31,11 @@ public class AccountHolderService implements IAccountHolderService {
                 accountHolderDTO.getMailingAddress(),
                 accountHolderDTO.getPrimaryAddress()
                 );
-        Role role = roleRepository.save(new Role(UserRole.ACCOUNT_HOLDER, accountHolder));
+
+        Role role = new Role(UserRole.ACCOUNT_HOLDER, accountHolder);
         accountHolder.addRole(role);
         accountHolderRepository.save(accountHolder);
         return accountHolder;
-
 
     }
 

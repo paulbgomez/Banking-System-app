@@ -1,6 +1,8 @@
 package com.ironhack.demobakingapp.controller.DTO;
 
 import com.ironhack.demobakingapp.enums.Status;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
@@ -8,14 +10,14 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class SavingsDTO {
-    @NotNull
+    @NotNull(message = "Primary owner cannot be null")
     private Long primaryOwnerId;
     private Long secondaryOwnerId;
-    @NotNull
+    @NotNull(message = "balance cannot be null")
     private BigDecimal balance;
-    @NotNull
+    @NotNull(message = "Secret key cannot be null")
     private String secretKey;
-    @NotNull
+    @NotNull(message = "Status cannot be null")
     private Status status;
     @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000")
     @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100")
@@ -25,18 +27,18 @@ public class SavingsDTO {
     private BigDecimal interestRate;
 
 
-    /** Constructors **/
+
     public SavingsDTO(@NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status, @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000") @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100") BigDecimal minimumBalance, @DecimalMax(value = "0.5", message = "The interest rate has to be less than 0.5") @DecimalMin(value = "0", message = "The interest rate has to be more than 0") BigDecimal interestRate) {
-        this.primaryOwnerId = primaryOwnerId;
-        this.secondaryOwnerId = secondaryOwnerId;
-        this.balance = balance;
-        this.secretKey = secretKey;
-        this.status = status;
-        this.minimumBalance = minimumBalance;
-        this.interestRate = interestRate;
+        setPrimaryOwnerId(primaryOwnerId);
+        setSecondaryOwnerId(secondaryOwnerId);
+        setBalance(balance);
+        setSecretKey(secretKey);
+        setStatus(status);
+        setMinimumBalance(minimumBalance);
+        setInterestRate(interestRate);
     }
 
-    /** Getters & Setters **/
+
     public Long getPrimaryOwnerId() {return primaryOwnerId;}
     public void setPrimaryOwnerId(Long primaryOwnerId) {this.primaryOwnerId = primaryOwnerId;}
     public Long getSecondaryOwnerId() {return secondaryOwnerId;}
@@ -44,7 +46,10 @@ public class SavingsDTO {
     public BigDecimal getBalance() {return balance;}
     public void setBalance(BigDecimal balance) {this.balance = balance;}
     public String getSecretKey() {return secretKey;}
-    public void setSecretKey(String  secretKey) {this.secretKey = secretKey;}
+    public void setSecretKey(String secretKey) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.secretKey = passwordEncoder.encode(secretKey);
+    }
     public Status getStatus() {return status;}
     public void setStatus(Status status) {this.status = status;}
     public BigDecimal getMinimumBalance() {return minimumBalance;}

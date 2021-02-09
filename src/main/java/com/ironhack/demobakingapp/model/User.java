@@ -17,8 +17,8 @@ public class User {
     protected String password;
     protected String username;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore//fetch?? cascade??
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     protected Set<Role> roles = new HashSet<>();
 
     public User() {

@@ -1,5 +1,6 @@
 package com.ironhack.demobakingapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -42,8 +43,10 @@ public class AccountHolder extends User {
     })
     private Address primaryAddress;
     @OneToMany(mappedBy = "primaryOwner")
+    @JsonIgnore
     private Set<Account> primaryAccounts;
     @OneToMany(mappedBy = "secondaryOwner")
+    @JsonIgnore
     private Set<Account> secondaryAccounts;
 
     public AccountHolder() {
