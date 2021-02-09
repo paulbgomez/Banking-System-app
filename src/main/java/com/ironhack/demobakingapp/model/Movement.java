@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,15 +33,22 @@ public class Movement {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime transferenceDate;
+    private String concept;
 
     public Movement() {
     }
 
     public Movement(Account senderAccount, Account receiverAccount, Money quantity) {
-        this.senderAccount = senderAccount;
-        this.receiverAccount = receiverAccount;
-        this.quantity = quantity;
-        this.transferenceDate = LocalDateTime.now();
+        setSenderAccount(senderAccount);
+        setReceiverAccount(receiverAccount);
+        setQuantity(quantity);
+        setTransferenceDate(LocalDateTime.now());
+    }
+
+    public Movement(Money quantity, String concept) {
+        setQuantity(quantity);
+        setConcept(concept);
+        setTransferenceDate(LocalDateTime.now());
     }
 
     public Long getId() {
@@ -81,5 +89,13 @@ public class Movement {
 
     public void setTransferenceDate(LocalDateTime transferenceDate) {
         this.transferenceDate = transferenceDate;
+    }
+
+    public String getConcept() {
+        return concept;
+    }
+
+    public void setConcept(String concept) {
+        this.concept = concept;
     }
 }

@@ -5,27 +5,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ironhack.demobakingapp.classes.Address;
-import com.ironhack.demobakingapp.model.Account;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 
-public class AccountHolderDTO {
+public class AccountHolderDTO extends UserDTO{
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
-
-    @NotEmpty
-    @NotNull
-    private String name;
-
-    @NotEmpty
-    @NotNull
-    private String username;
 
     @NotEmpty
     @NotNull
@@ -35,17 +24,16 @@ public class AccountHolderDTO {
     @NotNull
     private Address primaryAddress;
 
-    @NotEmpty
-    @NotNull
-    private String password;
 
-    public AccountHolderDTO(LocalDate birthDate, @NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull Address mailingAddress, @NotEmpty @NotNull Address primaryAddress, @NotEmpty @NotNull String password) {
+    public AccountHolderDTO(@NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull String password) {
+        super(name, username, password);
+    }
+
+    public AccountHolderDTO(@NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull String password, LocalDate birthDate, @NotEmpty @NotNull Address mailingAddress, @NotEmpty @NotNull Address primaryAddress) {
+        super(name, username, password);
         this.birthDate = birthDate;
-        this.name = name;
-        this.username = username;
         this.mailingAddress = mailingAddress;
         this.primaryAddress = primaryAddress;
-        setPassword(password);
     }
 
     public LocalDate getBirthDate() {
@@ -72,28 +60,5 @@ public class AccountHolderDTO {
         this.primaryAddress = primaryAddress;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.password = passwordEncoder.encode(password);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

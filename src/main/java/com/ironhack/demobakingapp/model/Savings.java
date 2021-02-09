@@ -33,11 +33,11 @@ public class Savings extends Account{
     public Savings() {
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, Status status, String secretKey) {
+    public Savings(AccountHolder primaryOwner, Money balance, String secretKey, Status status) {
         super(balance, primaryOwner);
-        this.status = status;
-        this.belowMinimumBalance = false;
-        this.secretKey = secretKey;
+        setStatus(status);
+        setBelowMinimumBalance(false);
+        setSecretKey(secretKey);
     }
 
     public Status getStatus() {

@@ -101,7 +101,7 @@ public class AccountHolder extends User {
         this.secondaryAccounts = secondaryAccounts;
     }
 
-    public Set<Account> accessAll(){
+    public Set<Account> showAccounts(){
         Set<Account> result = new HashSet<>();
         this.primaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toSet());
         this.secondaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toSet());

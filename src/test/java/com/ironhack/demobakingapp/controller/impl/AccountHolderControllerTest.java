@@ -54,7 +54,8 @@ class AccountHolderControllerTest {
     @Test
     void create() throws Exception {
         Address address = new Address("Chicago", "True Street 123", "Illinois", "USA", "ZHH53");
-        AccountHolderDTO accountHolderDTO = new AccountHolderDTO(LocalDate.of(1993, 12, 07), "lola", "lola_93", address, address, "123456");
+        AccountHolderDTO accountHolderDTO = new AccountHolderDTO("lola", "lola_93", "123456", LocalDate.of(1993, 12, 07), address
+        , address);
         String body = objectMapper.writeValueAsString(accountHolderDTO);
         MvcResult result = mockMvc.perform(
                 post("/accountholder")

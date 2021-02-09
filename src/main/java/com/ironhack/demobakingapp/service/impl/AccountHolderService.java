@@ -20,7 +20,6 @@ public class AccountHolderService implements IAccountHolderService {
     @Autowired
     private RoleRepository roleRepository;
 
-
     public AccountHolder create(AccountHolderDTO accountHolderDTO){
 
         AccountHolder accountHolder = new AccountHolder(
