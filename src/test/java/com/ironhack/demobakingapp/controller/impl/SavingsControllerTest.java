@@ -7,25 +7,40 @@ import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.controller.DTO.AccountHolderDTO;
 import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
 import com.ironhack.demobakingapp.enums.Status;
+import com.ironhack.demobakingapp.model.Account;
 import com.ironhack.demobakingapp.model.AccountHolder;
 import com.ironhack.demobakingapp.model.Savings;
-import com.ironhack.demobakingapp.repository.AccountHolderRepository;
-import com.ironhack.demobakingapp.repository.AccountRepository;
-import com.ironhack.demobakingapp.repository.RoleRepository;
-import com.ironhack.demobakingapp.repository.SavingsRepository;
+import com.ironhack.demobakingapp.model.User;
+import com.ironhack.demobakingapp.repository.*;
+import com.ironhack.demobakingapp.security.CustomUserDetails;
 import com.ironhack.demobakingapp.service.impl.AccountHolderService;
 import com.ironhack.demobakingapp.service.impl.SavingsService;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.management.relation.RoleStatus;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,6 +48,9 @@ import java.util.Currency;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,17 +76,31 @@ class SavingsControllerTest {
     @Autowired
     AccountHolderRepository accountHolderRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    private List<Account> accounts;
+    private List<User> users;
+
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         Address address = new Address("Philadelphia", "Fake Street 123", "Pennsylvania", "USA", "ZP886F");
         AccountHolderDTO accountHolderDTO = new AccountHolderDTO("lola", "lola_93", "123456", LocalDate.of(1993, 12, 07), address
         , address);
         AccountHolder accountHolder = accountHolderService.create(accountHolderDTO);
         accountHolderRepository.save(accountHolder);
+
+        SavingsDTO savingsDTO2 = new SavingsDTO( accountHolderRepository.findByName("lola").get().getId(), null, new BigDecimal(10967990.56), "sisterAct", Status.ACTIVE, null, null);
+        Savings savingX = savingsService.transformToSavingsFromDTO(savingsDTO2);
+
+        accounts = new ArrayList<>();
+        accounts.add(savingsRepository.save(savingX));
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
     }
 
     @AfterEach
@@ -117,22 +149,18 @@ class SavingsControllerTest {
 
     @Test
     void checkBalance() throws Exception {
-        SavingsDTO savingsDTO2 = new SavingsDTO( accountHolderRepository.findByName("lola").get().getId(), null, new BigDecimal(10967990.56), "sisterAct", Status.ACTIVE, null, null);
-
-        List<Savings> savingsList = savingsRepository.saveAll(List.of(
-                savingsService.transformToSavingsFromDTO(savingsDTO2)
-        ));
-
-        String body = objectMapper.writeValueAsString(savingsList);
-
-        Long id = savingsList.get(0).getId();
+        org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User("lola_93", "123456", AuthorityUtils.createAuthorityList("ACCOUNT_HOLDER"));
+        TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user,null);
+        String body = objectMapper.writeValueAsString(accounts.get(0));
 
         MvcResult result = mockMvc.perform(
-                get("/savings/balance/" + id)
+                get("/savings/balance/" + accounts.get(0).getId())
+                        .principal(testingAuthenticationToken)
                         .content(body)
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk()).andReturn();
+                        //.with(user(new CustomUserDetails(accountHolderRepository.findByUsername("lola_93").get())))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
         assertTrue(result.getResponse().getContentAsString().contains("lola"));
-        assertEquals(new BigDecimal(10967990.56), savingsRepository.findById(id).get().getBalance());
     }
+
 }

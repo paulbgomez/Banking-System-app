@@ -1,5 +1,6 @@
 package com.ironhack.demobakingapp.security;
 
+import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.service.impl.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.management.relation.RoleStatus;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -37,12 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic();
         http.csrf().disable().authorizeRequests()
-                .mvcMatchers("/blogpost/").hasAnyRole("ADMIN", "CONTRIBUTOR")
-                .mvcMatchers("/blogpost/**/update").hasAnyRole("ADMIN", "CONTRIBUTOR")
-                .mvcMatchers("/blogpost/**/delete").hasRole("ADMIN")
-                .mvcMatchers("/author/").hasRole("ADMIN")
-                .mvcMatchers("/author/**/update").hasAnyRole("ADMIN", "CONTRIBUTOR")
-                .mvcMatchers("/author/**/delete").hasRole("ADMIN")
+                .mvcMatchers("/new/admin/").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/new/account-holder/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/account-balance/all/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/account-balance/**/single/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/savings/balance/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
                 .anyRequest().permitAll();
     }
 }

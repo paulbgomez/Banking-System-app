@@ -12,6 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Service
 public class AccountHolderService implements IAccountHolderService {
 
@@ -30,9 +35,9 @@ public class AccountHolderService implements IAccountHolderService {
                 accountHolderDTO.getMailingAddress(),
                 accountHolderDTO.getPrimaryAddress()
                 );
-
         Role role = new Role(UserRole.ACCOUNT_HOLDER, accountHolder);
-        accountHolder.addRole(role);
+        Set<Role> roles = Stream.of(role).collect(Collectors.toCollection(HashSet::new));
+        accountHolder.setRoles(roles);
         accountHolderRepository.save(accountHolder);
         return accountHolder;
 

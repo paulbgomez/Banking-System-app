@@ -24,7 +24,7 @@ public class UserDTO {
     public UserDTO(@NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull String password) {
         this.name = name;
         this.username = username;
-        this.password = password;
+        setPassword(password);
     }
 
     public String getPassword() {

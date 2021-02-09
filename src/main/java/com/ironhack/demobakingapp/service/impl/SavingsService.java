@@ -8,6 +8,7 @@ import com.ironhack.demobakingapp.model.AccountHolder;
 import com.ironhack.demobakingapp.model.Savings;
 import com.ironhack.demobakingapp.repository.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.SavingsRepository;
+import com.ironhack.demobakingapp.security.CustomUserDetails;
 import com.ironhack.demobakingapp.service.interfaces.ISavingsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -119,15 +120,13 @@ public class SavingsService implements ISavingsService {
         }
     }
 
-    public BalanceDTO checkBalance(Long id, Authentication authentication){
+    public BalanceDTO checkBalance(Long id, String username){
 
-        AccountHolder accountHolder = accountHolderRepository.findByUsername(authentication.getName()).get();
+        //AccountHolder accountHolder = accountHolderRepository.findByUsername(authentication.getName()).get();
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(username).get();
         Savings savings = savingsRepository.findById(id).get();
         BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
 
-        if(!accountHolder.getRoles().equals(UserRole.ADMIN)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not an Admin.");
-        }
         if(!accountHolder.showAccounts().equals(savings)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not have a savings account.");
         }

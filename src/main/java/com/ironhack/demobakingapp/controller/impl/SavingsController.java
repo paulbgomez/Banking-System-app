@@ -5,14 +5,16 @@ import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
 import com.ironhack.demobakingapp.controller.interfaces.ISavingsController;
 import com.ironhack.demobakingapp.model.Savings;
+import com.ironhack.demobakingapp.security.CustomUserDetails;
 import com.ironhack.demobakingapp.service.interfaces.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -36,8 +38,8 @@ public class SavingsController implements ISavingsController {
 
     @GetMapping("/savings/balance/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BalanceDTO checkBalance(@PathVariable @Valid Long id, @AuthenticationPrincipal Authentication authentication) {
-        return savingsService.checkBalance(id, authentication);
+    public BalanceDTO checkBalance(@PathVariable Long id, Principal username) {
+        return savingsService.checkBalance(id, username.getName());
     }
 
 }
