@@ -1,28 +1,19 @@
 package com.ironhack.demobakingapp.controller.impl;
 
-import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.controller.DTO.*;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.*;
 import com.ironhack.demobakingapp.repository.*;
-import com.ironhack.demobakingapp.security.CustomUserDetails;
 import com.ironhack.demobakingapp.service.impl.*;
-import com.ironhack.demobakingapp.service.interfaces.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 @RestController
 public class AdminController {
@@ -185,7 +176,7 @@ public class AdminController {
     /** PUT REQUESTS **/
 
     /** Increment Balance Amount **/
-    @PutMapping("/admin/account/{id}/{amount}")
+    @PatchMapping("/admin/account/{id}/{amount}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void incrementBalance(@PathVariable Long id, @PathVariable BigDecimal amount, Principal principal){
         Optional<Admin> admin = Optional.ofNullable(adminRepository.findByUsername(principal.getName()));

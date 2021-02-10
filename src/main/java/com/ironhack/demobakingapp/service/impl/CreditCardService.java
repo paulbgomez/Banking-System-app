@@ -61,6 +61,7 @@ public class CreditCardService {
     public void addInterestRate(Long id){
         Optional<CreditCard> creditCard = creditCardRepository.findById(id);
         Integer month = Time.months(creditCard.get().getLastInterestUpdate());
+        System.out.println(month);
 
         if (creditCard.isPresent() && month >= 1){
                 BigDecimal calculatedInterest = creditCard.get().getBalance().getAmount()

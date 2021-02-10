@@ -1,5 +1,9 @@
 package com.ironhack.demobakingapp.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
 
 import javax.annotation.processing.Generated;
@@ -19,6 +23,8 @@ public class CreditCard extends Account{
     })
     private Money creditLimit;
     private BigDecimal interestRate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDate lastInterestUpdate;
 
 

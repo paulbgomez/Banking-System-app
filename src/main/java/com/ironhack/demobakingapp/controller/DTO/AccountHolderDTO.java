@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ironhack.demobakingapp.classes.Address;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 
 public class AccountHolderDTO extends UserDTO{
+    /** PARAMS **/
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
@@ -21,13 +21,15 @@ public class AccountHolderDTO extends UserDTO{
 
     private Address primaryAddress;
 
+    /** CONSTRUCTORS **/
     public AccountHolderDTO(@NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull String password, LocalDate birthDate, @NotEmpty @NotNull Address mailingAddress, @NotEmpty @NotNull Address primaryAddress) {
         super(name, username, password);
-        this.birthDate = birthDate;
-        this.mailingAddress = mailingAddress;
-        this.primaryAddress = primaryAddress;
+        setBirthDate(birthDate);
+        setMailingAddress(mailingAddress);
+        setPrimaryAddress(primaryAddress);
     }
 
+    /** GETTERS & SETTERS **/
     public LocalDate getBirthDate() {
         return birthDate;
     }

@@ -3,23 +3,29 @@ package com.ironhack.demobakingapp.controller.DTO;
 import com.ironhack.demobakingapp.enums.Status;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class StudentCheckingDTO {
 
-    @NotNull(message = "Primary owner cannot be null")
+    /** PARAMS **/
+
+    @NotNull(message = "You need at least one primary owner ID")
+    @NotEmpty
     private Long primaryOwnerId;
     private Long secondaryOwnerId;
-    @NotNull(message = "balance cannot be null")
+    @NotNull(message = "Balance cannot be null")
+    @NotEmpty
     private BigDecimal balance;
     @NotNull(message = "Secret key cannot be null")
+    @NotEmpty
     private String secretKey;
     @NotNull(message = "Status cannot be null")
+    @NotEmpty
     private Status status;
 
+    /** CONSTRUCTOR **/
 
     public StudentCheckingDTO(@NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status) {
         setPrimaryOwnerId(primaryOwnerId);
@@ -28,6 +34,8 @@ public class StudentCheckingDTO {
         setSecretKey(secretKey);
         setStatus(status);
     }
+
+    /** GETTERS & SETTERS **/
 
     public Long getPrimaryOwnerId() {return primaryOwnerId;}
     public void setPrimaryOwnerId(Long primaryOwnerId) {this.primaryOwnerId = primaryOwnerId;}
@@ -38,8 +46,8 @@ public class StudentCheckingDTO {
     public String getSecretKey() {return secretKey;}
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        this.secretKey = passwordEncoder.encode(secretKey);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.secretKey = passwordEncoder.encode(secretKey);
     }
     public Status getStatus() {return status;}
     public void setStatus(Status status) {this.status = status;}

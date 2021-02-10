@@ -1,5 +1,9 @@
 package com.ironhack.demobakingapp.controller.DTO;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -7,10 +11,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class CreditCardDTO {
-    @NotNull(message = "Primary owner cannot be null")
+    /** PARAMS **/
+    @NotNull(message = "You need at least one primary owner ID")
     private Long primaryOwnerId;
     private Long secondaryOwnerId;
-    @NotNull(message = "balance cannot be null")
+    @NotNull(message = "Balance cannot be null")
     private BigDecimal balance;
 
     @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000")
@@ -19,8 +24,11 @@ public class CreditCardDTO {
     @DecimalMax(value = "0.2", message = "The interest rate has to be less than 0.2")
     @DecimalMin(value = "0.1" , message = "The interest rate has to be more than 0.1")
     private BigDecimal interestRate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDate lastInterestUpdate;
 
+    /** CONSTRUCTORS **/
 
     public CreditCardDTO(@NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000") @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100") BigDecimal creditLimit, @DecimalMax(value = "0.5", message = "The interest rate has to be less than 0.5") @DecimalMin(value = "0", message = "The interest rate has to be more than 0") BigDecimal interestRate, LocalDate lastInterestUpdate) {
         setPrimaryOwnerId(primaryOwnerId);
@@ -30,6 +38,8 @@ public class CreditCardDTO {
         setInterestRate(interestRate);
         setLastInterestUpdate(lastInterestUpdate);
     }
+
+    /** GETTERS & SETTERS **/
 
     public Long getPrimaryOwnerId() {return primaryOwnerId;}
     public void setPrimaryOwnerId(Long primaryOwnerId) {this.primaryOwnerId = primaryOwnerId;}

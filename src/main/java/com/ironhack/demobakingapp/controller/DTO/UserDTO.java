@@ -2,30 +2,34 @@ package com.ironhack.demobakingapp.controller.DTO;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class UserDTO {
+    /** PARAMS **/
 
-    @NotEmpty
+    @NotEmpty(message = "Name cannot be null")
     @NotNull
     private String name;
 
-    @NotEmpty
+    @NotEmpty(message = "Username cannot be null")
     @NotNull
     private String username;
 
 
-    @NotEmpty
+    @NotEmpty(message = "Password cannot be null")
     @NotNull
     private String password;
+
+    /** CONSTRUCTOR **/
 
     public UserDTO(@NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull String password) {
         this.name = name;
         this.username = username;
         setPassword(password);
     }
+
+    /** GETTERS & SETTERS **/
 
     public String getPassword() {
         return password;

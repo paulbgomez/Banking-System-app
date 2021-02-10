@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 public class BalanceDTO {
+    /** PARAMS **/
+
     @NotNull
     @NotEmpty
     private Long accountId;
@@ -15,6 +17,8 @@ public class BalanceDTO {
     @NotEmpty
     private Currency balanceCurrency;
 
+    /** CONSTRUCTORS **/
+
     public BalanceDTO() {
     }
 
@@ -23,6 +27,8 @@ public class BalanceDTO {
         setBalanceAmount(balanceAmount);
         setBalanceCurrency(balanceCurrency);
     }
+
+    /** GETTERS & SETTERS **/
 
     public Long getAccountId() {return accountId;}
     public void setAccountId(Long accountId) {this.accountId = accountId;}
