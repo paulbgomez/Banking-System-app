@@ -13,7 +13,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CheckingDTO {
+
     /** PARAMS **/
+
     @NotNull(message = "You need at least one primary owner ID")
     private Long primaryOwnerId;
     private Long secondaryOwnerId;
@@ -29,6 +31,7 @@ public class CheckingDTO {
     private LocalDateTime lastFee;
 
     /** CONSTRUCTORS **/
+
     public CheckingDTO(@NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status) {
         setPrimaryOwnerId(primaryOwnerId);
         setSecondaryOwnerId(secondaryOwnerId);
@@ -39,6 +42,7 @@ public class CheckingDTO {
     }
 
     /** GETTERS & SETTERS **/
+
     public Long getPrimaryOwnerId() {
         return primaryOwnerId;
     }

@@ -11,14 +11,12 @@ import java.time.LocalDate;
 
 
 public class AccountHolderDTO extends UserDTO{
+
     /** PARAMS **/
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
-
     private Address mailingAddress;
-
-
     private Address primaryAddress;
 
     /** CONSTRUCTORS **/

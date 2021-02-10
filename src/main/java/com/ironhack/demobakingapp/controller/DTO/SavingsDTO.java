@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class SavingsDTO {
+
     /** PARAMS **/
 
     @NotNull(message = "You need at least one primary owner ID")

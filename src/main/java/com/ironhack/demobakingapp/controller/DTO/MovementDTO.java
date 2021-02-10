@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 public class MovementDTO {
 
     /** PARAMS **/
+
     private Long senderAccountId;
     @NotNull(message = "You need to provide a name for the receiver")
     @NotEmpty
@@ -20,6 +21,7 @@ public class MovementDTO {
     private BigDecimal amount;
 
     /** CONSTRUCTORS **/
+
     /** Between Account Holders **/
     public MovementDTO(Long senderAccountId, String receiverName, Long receiverAccountId, BigDecimal amount) {
         this.senderAccountId = senderAccountId;
@@ -36,6 +38,7 @@ public class MovementDTO {
     }
 
     /** GETTERS & SETTERS **/
+
     public Long getSenderAccountId() {
         return senderAccountId;
     }

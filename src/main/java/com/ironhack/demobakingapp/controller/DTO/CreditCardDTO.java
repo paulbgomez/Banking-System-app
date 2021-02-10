@@ -11,7 +11,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class CreditCardDTO {
+
     /** PARAMS **/
+
     @NotNull(message = "You need at least one primary owner ID")
     private Long primaryOwnerId;
     private Long secondaryOwnerId;
