@@ -10,32 +10,7 @@ public class FraudConditionsService {
     @Autowired
     MovementRepository movementRepository;
 
-//    public boolean firstCondition(MovementDTO movementDTO){
-//        BigDecimal sumLastDayAmounts = movementRepository.sumLastDayTransferences(newTransference.getOriginId());
-//        List<BigDecimal> sumOfTransferenceByDay = transferenceRepository.sumOfTransferenceByDay(newTransference.getOriginId());
-//
-//        BigDecimal max = sumOfTransferenceByDay.stream().max(BigDecimal::compareTo).orElse(BigDecimal.ZERO);
-//
-//
-//        boolean result;
-//
-//        if (max.compareTo(BigDecimal.ZERO) == 0 || max.multiply(new BigDecimal("1.5")).compareTo(newTransference.getAmount()) > 0 ) {
-//            result = true;
-//        } else {
-//            result = false;
-//        }
-//        return result;
-//    }
-//
-//    public boolean secondCondition(NewTransference newTransference){
-//        boolean result;
-//
-//        List<Transference> transferences = transferenceRepository.lastSecondTransferences(newTransference.getOriginId());
-//        if(transferences.size() != 0 ){
-//            result = false;
-//        }else{
-//            result = true;
-//        }
-//        return result;
-//    }
+   /** Transactions made in 24 hours that total to more than 150% of the customers highest daily total transactions in any other 24 hour period. **/
+
+   /** More than 2 transactions occurring on a single account within a 1 second period. **/
 }

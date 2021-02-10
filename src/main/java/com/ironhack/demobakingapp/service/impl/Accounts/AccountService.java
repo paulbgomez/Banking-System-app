@@ -67,6 +67,7 @@ public class AccountService {
     @Autowired
     private MovementRepository movementRepository;
 
+    /** @Admin method to increment the balance of an account **/
     public void incrementBalance(Long id, BigDecimal amount, String username){
 
         Account typeOfAccount = accountRepository.findById(id).get();
@@ -93,6 +94,7 @@ public class AccountService {
         }
     }
 
+    /** @Admin method to decrement the balance of an account **/
     public void decrementBalance(Long id, BigDecimal amount, String username){
 
         Account typeOfAccount = accountRepository.findById(id).get();
@@ -122,11 +124,10 @@ public class AccountService {
         if(!user.showAccounts().contains(originAccount)){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The origin account does not belong to the logged user");
         }
-//        if(!fraudService.firstCondition(newTransference) || !fraudService.secondCondition(newTransference)) {
-//            throw new FraudException("This transaction can not be done due to fraud detections"); }
         if(movementDTO.getAmount().compareTo(originAccount.getBalance().getAmount()) > 0 ){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There are not enough funds in the account");
         }
+        //fraude??
 
         Account destinationAccount = accountRepository.findById(movementDTO.getReceiverAccountId()).get();
         Money amount = new Money(movementDTO.getAmount());
