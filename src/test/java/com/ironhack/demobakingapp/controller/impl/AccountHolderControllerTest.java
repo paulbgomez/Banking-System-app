@@ -2,9 +2,9 @@ package com.ironhack.demobakingapp.controller.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ironhack.demobakingapp.classes.Address;
-import com.ironhack.demobakingapp.controller.DTO.AccountHolderDTO;
-import com.ironhack.demobakingapp.repository.AccountHolderRepository;
-import com.ironhack.demobakingapp.repository.RoleRepository;
+import com.ironhack.demobakingapp.controller.DTO.Accounts.AccountHolderDTO;
+import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
+import com.ironhack.demobakingapp.repository.Users.RoleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
 package com.ironhack.demobakingapp.controller.impl;
 
-import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
-import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
+import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
+import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
 import com.ironhack.demobakingapp.model.Accounts.Savings;
-import com.ironhack.demobakingapp.service.interfaces.ISavingsService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

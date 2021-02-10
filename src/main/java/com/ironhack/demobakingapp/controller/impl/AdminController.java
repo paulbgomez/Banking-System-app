@@ -1,6 +1,11 @@
 package com.ironhack.demobakingapp.controller.impl;
 
-import com.ironhack.demobakingapp.controller.DTO.*;
+import com.ironhack.demobakingapp.controller.DTO.Accounts.AccountHolderDTO;
+import com.ironhack.demobakingapp.controller.DTO.Accounts.CheckingDTO;
+import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
+import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
+import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.AdminDTO;
 import com.ironhack.demobakingapp.controller.interfaces.IAdminController;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.Accounts.CreditCard;
@@ -9,8 +14,11 @@ import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
 import com.ironhack.demobakingapp.model.Users.Role;
-import com.ironhack.demobakingapp.repository.*;
-import com.ironhack.demobakingapp.service.impl.*;
+import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
+import com.ironhack.demobakingapp.service.impl.Accounts.CreditCardService;
+import com.ironhack.demobakingapp.service.impl.Accounts.SavingsService;
+import com.ironhack.demobakingapp.service.impl.Accounts.StudentCheckingService;
+import com.ironhack.demobakingapp.service.impl.Users.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,28 +37,13 @@ public class AdminController implements IAdminController {
     private AdminService adminService;
 
     @Autowired
-    private AdminRepository adminRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private AccountHolderRepository accountHolderRepository;
-
-    @Autowired
-    private StudentCheckingRepository studentCheckingRepository;
 
     @Autowired
     private StudentCheckingService studentCheckingService;
 
     @Autowired
     private SavingsService savingsService;
-
-    @Autowired
-    private CreditCardRepository creditCardRepository;
 
     @Autowired
     private CreditCardService creditCardService;
@@ -136,7 +129,7 @@ public class AdminController implements IAdminController {
             Role role = new Role(UserRole.ADMIN, admin);
             Set<Role> roles = Stream.of(role).collect(Collectors.toCollection(HashSet::new));
             admin.setRoles(roles);
-            return adminRepository.save(admin);
+            return adminService.save(admin);
     }
 
     /** New Account Holder **/
@@ -152,7 +145,7 @@ public class AdminController implements IAdminController {
     @PutMapping("/admin/account/{id}/{amount}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void incrementBalance(@PathVariable Long id, @PathVariable BigDecimal amount, Principal principal){
-        Optional<Admin> admin = Optional.ofNullable(adminRepository.findByUsername(principal.getName()));
+        Optional<Admin> admin = Optional.ofNullable(adminService.findByUsername(principal.getName()));
         if(admin.isPresent()){
             accountService.incrementBalance(id, amount, principal.getName());
         }

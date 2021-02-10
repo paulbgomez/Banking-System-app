@@ -1,8 +1,8 @@
 package com.ironhack.demobakingapp.controller.impl;
 
-import com.ironhack.demobakingapp.controller.DTO.MovementDTO;
+import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
 import com.ironhack.demobakingapp.model.Movement;
-import com.ironhack.demobakingapp.service.impl.AccountService;
+import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
