@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class SavingsService implements ISavingsService {
@@ -49,6 +50,8 @@ public class SavingsService implements ISavingsService {
                 accountHolderRepository.findById(savingsDTO.getSecondaryOwnerId()).get() :
                 null ;
 
+        Random random = new Random();
+
         Savings savings = new Savings();
 
         if (accountHolder.isPresent()){
@@ -61,7 +64,7 @@ public class SavingsService implements ISavingsService {
                     new BigDecimal(0.0025));
             savings.setMinimumBalance(savingsDTO.getMinimumBalance() != null ?
                     new Money(savingsDTO.getMinimumBalance()) :
-                    new Money(new BigDecimal(Math.random()*1000)));
+                    new Money(new BigDecimal(random.nextInt(900) + 101)));
 
             savings.setLastFee(LocalDateTime.now());
         } else {

@@ -48,6 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/check-balance/savings/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
                 .mvcMatchers("/check-balance/admin/savings/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/admin/checkings/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/admin/credit-card/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/savings/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
                 .anyRequest().permitAll();
     }

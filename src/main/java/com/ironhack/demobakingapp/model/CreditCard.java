@@ -16,23 +16,24 @@ public class CreditCard extends Account{
             @AttributeOverride(name = "amount", column = @Column(name = "credit_limit_amount")),
             @AttributeOverride(name = "currency", column = @Column(name = "credit_limit_currency"))
     })
-    private Money creditLimitAmount;
+    private Money creditLimit;
     private BigDecimal interestRate;
 
     public CreditCard() {
     }
 
-    public CreditCard(Money creditLimitAmount, BigDecimal interestRate) {
-        this.creditLimitAmount = creditLimitAmount;
+    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, BigDecimal interestRate) {
+        super(balance, primaryOwner);
+        this.creditLimit = creditLimit;
         this.interestRate = interestRate;
     }
 
-    public Money getCreditLimitAmount() {
-        return creditLimitAmount;
+    public Money getCreditLimit() {
+        return creditLimit;
     }
 
-    public void setCreditLimitAmount(Money creditLimitAmount) {
-        this.creditLimitAmount = creditLimitAmount;
+    public void setCreditLimit(Money creditLimit) {
+        this.creditLimit = creditLimit;
     }
 
     public BigDecimal getInterestRate() {

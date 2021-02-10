@@ -1,14 +1,12 @@
 package com.ironhack.demobakingapp.controller.impl;
 
 import com.ironhack.demobakingapp.classes.Money;
-import com.ironhack.demobakingapp.controller.DTO.AdminDTO;
-import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
-import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
-import com.ironhack.demobakingapp.controller.DTO.StudentCheckingDTO;
+import com.ironhack.demobakingapp.controller.DTO.*;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.*;
 import com.ironhack.demobakingapp.repository.*;
 import com.ironhack.demobakingapp.security.CustomUserDetails;
+import com.ironhack.demobakingapp.service.impl.CreditCardService;
 import com.ironhack.demobakingapp.service.impl.SavingsService;
 import com.ironhack.demobakingapp.service.impl.StudentCheckingService;
 import com.ironhack.demobakingapp.service.interfaces.IAdminService;
@@ -56,6 +54,9 @@ public class AdminController {
     @Autowired
     private CreditCardRepository creditCardRepository;
 
+    @Autowired
+    private CreditCardService creditCardService;
+
     //enseña todas las cuentas
     @GetMapping("/account-balance/all/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -73,18 +74,18 @@ public class AdminController {
         return balanceDTOList;
     }
 
-    //enseña una las cuentas
-    @GetMapping("/account-balance/{id1}/single/{id2}")
-    @ResponseStatus(HttpStatus.OK)
-    public BalanceDTO checkBalanceSingle(@PathVariable Long id1, @PathVariable Long id2, Principal principal) {
-        if (adminRepository.existsById(id2) && principal.getName().equals(adminRepository.findById(id2).get().getUsername())) {
-            Account account = accountRepository.findById(id1).get();
-            BalanceDTO balanceDTO = new BalanceDTO(account.getId(), account.getBalance().getAmount(), account.getBalance().getCurrency());
-            return balanceDTO;
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin id not found");
-        }
-    }
+//    //enseña una las cuentas
+//    @GetMapping("/account-balance/{id1}/single/{id2}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public BalanceDTO checkBalanceSingle(@PathVariable Long id1, @PathVariable Long id2, Principal principal) {
+//        if (adminRepository.existsById(id2) && principal.getName().equals(adminRepository.findById(id2).get().getUsername())) {
+//            Account account = accountRepository.findById(id1).get();
+//            BalanceDTO balanceDTO = new BalanceDTO(account.getId(), account.getBalance().getAmount(), account.getBalance().getCurrency());
+//            return balanceDTO;
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin id not found");
+//        }
+//    }
 
     //devuelve todos los admins
     @GetMapping("/admin/account")
@@ -156,9 +157,19 @@ public class AdminController {
 
     @PostMapping("/admin/checkings/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public StudentChecking create(@PathVariable Long id, @RequestBody StudentCheckingDTO studentCheckingDTO, Principal principal) {
+    public StudentChecking addStudentCheking(@PathVariable Long id, @RequestBody StudentCheckingDTO studentCheckingDTO, Principal principal) {
         if (adminRepository.findById(id).isPresent() && principal.getName().equals(adminRepository.findById(id).get().getUsername())) {
             return studentCheckingService.add(studentCheckingDTO);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The id does not match an Admin Account");
+        }
+    }
+
+    @PostMapping("/admin/credit-card/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CreditCard addCreditCard(@PathVariable Long id, @RequestBody CreditCardDTO creditCardDTO, Principal principal) {
+        if (adminRepository.findById(id).isPresent() && principal.getName().equals(adminRepository.findById(id).get().getUsername())) {
+            return creditCardService.add(creditCardDTO);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The id does not match an Admin Account");
         }
