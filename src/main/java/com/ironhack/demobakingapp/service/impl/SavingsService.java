@@ -5,9 +5,13 @@ import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.AccountHolder;
+import com.ironhack.demobakingapp.model.Admin;
 import com.ironhack.demobakingapp.model.Savings;
+import com.ironhack.demobakingapp.model.User;
 import com.ironhack.demobakingapp.repository.AccountHolderRepository;
+import com.ironhack.demobakingapp.repository.AdminRepository;
 import com.ironhack.demobakingapp.repository.SavingsRepository;
+import com.ironhack.demobakingapp.repository.UserRepository;
 import com.ironhack.demobakingapp.security.CustomUserDetails;
 import com.ironhack.demobakingapp.service.interfaces.ISavingsService;
 import org.springframework.http.HttpStatus;
@@ -31,6 +35,12 @@ public class SavingsService implements ISavingsService {
 
     @Autowired
     private AccountHolderRepository accountHolderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
 
 
     public Savings add(SavingsDTO savingsDTO){
@@ -109,31 +119,49 @@ public class SavingsService implements ISavingsService {
         Integer year = Period.between(savings.get().getLastFee().toLocalDate(), LocalDate.now()).getYears();
 
         if (savings.isPresent() && year >= 1){
-            //Calculo interes
             BigDecimal newInterestRate = savings.get().getBalance().getAmount()
                     .multiply(savings.get().getInterestRate())
                     .multiply(new BigDecimal(years(savings.get().getLastFee())));
-            //Sumo interes
             savings.get().getBalance().increaseAmount(newInterestRate);
-            //Añado ultima fecha de interes
             savings.get().setLastFee(LocalDateTime.now());
         }
     }
 
     public BalanceDTO checkBalance(Long id, String username){
 
-        //AccountHolder accountHolder = accountHolderRepository.findByUsername(authentication.getName()).get();
-        AccountHolder accountHolder = accountHolderRepository.findByUsername(username).get();
+        User user = userRepository.findByUsername(username).get();
+
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(user.getUsername()).get();
         Savings savings = savingsRepository.findById(id).get();
         BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
 
-        if(!accountHolder.showAccounts().equals(savings)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not have a savings account.");
-        }
-        if(!savings.isBelowMinimumBalance()){
+        if(accountHolder.showAccounts().contains(savings)){
+            addInterestRate(id);
+            return balance;
+        } else if (savings.isBelowMinimumBalance()) {
             savings.getBalance().decreaseAmount(savings.getPenalty());
+            return balance;
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not admin nor have saving accounts");
         }
-        addInterestRate(id);
-        return balance;
+    }
+
+    public BalanceDTO checkBalanceAdmin(Long id, String username){
+
+        User user = userRepository.findByUsername(username).get();
+
+        Admin admin = adminRepository.findByUsername(user.getUsername());
+        Savings savings = savingsRepository.findById(id).get();
+        BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
+
+        if(admin.getUsername().equals(username)){
+            addInterestRate(id);
+            return balance;
+        } else if (savings.isBelowMinimumBalance()) {
+            savings.getBalance().decreaseAmount(savings.getPenalty());
+            return balance;
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not admin nor have saving accounts");
+        }
     }
 }

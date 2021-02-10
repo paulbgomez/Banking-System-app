@@ -3,23 +3,19 @@ package com.ironhack.demobakingapp.controller.impl;
 
 import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
-import com.ironhack.demobakingapp.controller.interfaces.ISavingsController;
 import com.ironhack.demobakingapp.model.Savings;
-import com.ironhack.demobakingapp.security.CustomUserDetails;
 import com.ironhack.demobakingapp.service.interfaces.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 
 
 @RestController
-public class SavingsController implements ISavingsController {
+public class SavingsController  {
 
     @Autowired
     private ISavingsService savingsService;
@@ -30,11 +26,6 @@ public class SavingsController implements ISavingsController {
         return savingsService.add(savingsDTO);
     }
 
-    @GetMapping("/savings")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Savings> findAll() {
-        return savingsService.findAll();
-    }
 
     @GetMapping("/savings/balance/{id}")
     @ResponseStatus(HttpStatus.OK)

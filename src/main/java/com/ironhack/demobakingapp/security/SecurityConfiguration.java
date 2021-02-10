@@ -40,11 +40,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic();
         http.csrf().disable().authorizeRequests()
-                .mvcMatchers("/new/admin/").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/new/admin/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/new/account-holder/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/account-balance/all/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/account-balance/**/single/**").hasRole(UserRole.ADMIN.toString())
-                .mvcMatchers("/savings/balance/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
+                .mvcMatchers("/admin/savings/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/check-balance/savings/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
+                .mvcMatchers("/check-balance/admin/savings/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/admin/checkings/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/savings/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
                 .anyRequest().permitAll();
     }
 }

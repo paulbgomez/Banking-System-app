@@ -107,4 +107,20 @@ public class AccountHolder extends User {
         this.secondaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toSet());
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "AccountHolder{" +
+                "birthDate=" + birthDate +
+                ", mailingAddress=" + mailingAddress +
+                ", primaryAddress=" + primaryAddress +
+                ", primaryAccounts=" + primaryAccounts +
+                ", secondaryAccounts=" + secondaryAccounts +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
 }
