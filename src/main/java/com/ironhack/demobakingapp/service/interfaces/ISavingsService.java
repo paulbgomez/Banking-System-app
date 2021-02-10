@@ -2,9 +2,7 @@ package com.ironhack.demobakingapp.service.interfaces;
 
 import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
-import com.ironhack.demobakingapp.model.Savings;
-import com.ironhack.demobakingapp.security.CustomUserDetails;
-import org.springframework.security.core.Authentication;
+import com.ironhack.demobakingapp.model.Accounts.Savings;
 
 import java.util.List;
 

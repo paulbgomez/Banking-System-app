@@ -1,6 +1,6 @@
 package com.ironhack.demobakingapp.repository;
 
-import com.ironhack.demobakingapp.model.Role;
+import com.ironhack.demobakingapp.model.Users.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

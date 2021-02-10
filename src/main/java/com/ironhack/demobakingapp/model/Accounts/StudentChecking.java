@@ -1,7 +1,8 @@
-package com.ironhack.demobakingapp.model;
+package com.ironhack.demobakingapp.model.Accounts;
 
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.enums.Status;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
 
 import javax.persistence.*;
 

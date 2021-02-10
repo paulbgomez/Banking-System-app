@@ -1,6 +1,6 @@
 package com.ironhack.demobakingapp.service.impl;
 
-import com.ironhack.demobakingapp.model.User;
+import com.ironhack.demobakingapp.model.Users.User;
 import com.ironhack.demobakingapp.repository.UserRepository;
 import com.ironhack.demobakingapp.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;

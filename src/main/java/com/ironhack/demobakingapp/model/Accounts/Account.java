@@ -1,10 +1,12 @@
-package com.ironhack.demobakingapp.model;
+package com.ironhack.demobakingapp.model.Accounts;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
+import com.ironhack.demobakingapp.model.Movement;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

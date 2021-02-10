@@ -2,16 +2,13 @@ package com.ironhack.demobakingapp.service.impl;
 
 import com.ironhack.demobakingapp.controller.DTO.AccountHolderDTO;
 import com.ironhack.demobakingapp.enums.UserRole;
-import com.ironhack.demobakingapp.model.AccountHolder;
-import com.ironhack.demobakingapp.model.Role;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
+import com.ironhack.demobakingapp.model.Users.Role;
 import com.ironhack.demobakingapp.repository.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.RoleRepository;
 import com.ironhack.demobakingapp.service.interfaces.IAccountHolderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,10 +19,8 @@ public class AccountHolderService implements IAccountHolderService {
 
     @Autowired
     private AccountHolderRepository accountHolderRepository;
-    @Autowired
-    private RoleRepository roleRepository;
 
-    public AccountHolder create(AccountHolderDTO accountHolderDTO){
+    public AccountHolder add(AccountHolderDTO accountHolderDTO){
 
         AccountHolder accountHolder = new AccountHolder(
                 accountHolderDTO.getName(),
@@ -42,5 +37,11 @@ public class AccountHolderService implements IAccountHolderService {
         return accountHolder;
 
     }
+
+    public AccountHolder findById(Long id){
+        return accountHolderRepository.getOne(id);
+    }
+
+
 
 }

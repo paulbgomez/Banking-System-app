@@ -1,10 +1,8 @@
 package com.ironhack.demobakingapp.controller.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ironhack.demobakingapp.classes.Address;
 import com.ironhack.demobakingapp.controller.DTO.AccountHolderDTO;
-import com.ironhack.demobakingapp.model.AccountHolder;
 import com.ironhack.demobakingapp.repository.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.RoleRepository;
 import org.junit.jupiter.api.AfterEach;

@@ -1,7 +1,7 @@
 package com.ironhack.demobakingapp.security;
 
-import com.ironhack.demobakingapp.model.Role;
-import com.ironhack.demobakingapp.model.User;
+import com.ironhack.demobakingapp.model.Users.Role;
+import com.ironhack.demobakingapp.model.Users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

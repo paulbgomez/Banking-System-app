@@ -1,6 +1,6 @@
 package com.ironhack.demobakingapp.repository;
 
-import com.ironhack.demobakingapp.model.Checking;
+import com.ironhack.demobakingapp.model.Accounts.Checking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

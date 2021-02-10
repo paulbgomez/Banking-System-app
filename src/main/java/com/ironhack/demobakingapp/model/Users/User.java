@@ -1,4 +1,4 @@
-package com.ironhack.demobakingapp.model;
+package com.ironhack.demobakingapp.model.Users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

@@ -1,4 +1,4 @@
-package com.ironhack.demobakingapp.model;
+package com.ironhack.demobakingapp.model.Users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -6,13 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ironhack.demobakingapp.classes.Address;
+import com.ironhack.demobakingapp.model.Accounts.Account;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

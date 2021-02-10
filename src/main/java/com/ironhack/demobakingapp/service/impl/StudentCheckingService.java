@@ -3,19 +3,15 @@ package com.ironhack.demobakingapp.service.impl;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.classes.Time;
 import com.ironhack.demobakingapp.controller.DTO.CheckingDTO;
-import com.ironhack.demobakingapp.controller.DTO.StudentCheckingDTO;
-import com.ironhack.demobakingapp.model.AccountHolder;
-import com.ironhack.demobakingapp.model.Checking;
-import com.ironhack.demobakingapp.model.StudentChecking;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
+import com.ironhack.demobakingapp.model.Accounts.Checking;
+import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
 import com.ironhack.demobakingapp.repository.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.CheckingRepository;
 import com.ironhack.demobakingapp.repository.StudentCheckingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service

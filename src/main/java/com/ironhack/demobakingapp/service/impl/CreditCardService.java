@@ -3,10 +3,8 @@ package com.ironhack.demobakingapp.service.impl;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.classes.Time;
 import com.ironhack.demobakingapp.controller.DTO.CreditCardDTO;
-import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
-import com.ironhack.demobakingapp.model.AccountHolder;
-import com.ironhack.demobakingapp.model.CreditCard;
-import com.ironhack.demobakingapp.model.Savings;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
+import com.ironhack.demobakingapp.model.Accounts.CreditCard;
 import com.ironhack.demobakingapp.repository.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.CreditCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.Optional;
 import java.util.Random;
 

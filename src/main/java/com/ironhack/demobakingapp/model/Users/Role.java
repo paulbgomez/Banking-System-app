@@ -1,4 +1,4 @@
-package com.ironhack.demobakingapp.model;
+package com.ironhack.demobakingapp.model.Users;
 
 import com.ironhack.demobakingapp.enums.UserRole;
 
