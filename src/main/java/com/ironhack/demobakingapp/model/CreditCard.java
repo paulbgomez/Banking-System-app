@@ -5,6 +5,7 @@ import com.ironhack.demobakingapp.classes.Money;
 import javax.annotation.processing.Generated;
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -18,6 +19,8 @@ public class CreditCard extends Account{
     })
     private Money creditLimit;
     private BigDecimal interestRate;
+    private LocalDate lastInterestUpdate;
+
 
     public CreditCard() {
     }
@@ -42,5 +45,13 @@ public class CreditCard extends Account{
 
     public void setInterestRate(BigDecimal interestRate) {
         this.interestRate = interestRate;
+    }
+
+    public LocalDate getLastInterestUpdate() {
+        return lastInterestUpdate;
+    }
+
+    public void setLastInterestUpdate(LocalDate lastInterestUpdate) {
+        this.lastInterestUpdate = lastInterestUpdate;
     }
 }

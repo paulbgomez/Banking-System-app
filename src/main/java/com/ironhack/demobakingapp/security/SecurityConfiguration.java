@@ -42,13 +42,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .mvcMatchers("/new/admin/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/new/account-holder/**").hasRole(UserRole.ADMIN.toString())
-                .mvcMatchers("/account-balance/all/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/admin/account-balance/all/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/account-balance/**/single/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/admin/savings/**").hasRole(UserRole.ADMIN.toString())
-                .mvcMatchers("/check-balance/savings/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
-                .mvcMatchers("/check-balance/admin/savings/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/savings/check-balance/**").hasRole(UserRole.ACCOUNT_HOLDER.toString())
+                .mvcMatchers("/admin/savings/check-balance/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/admin/checkings/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/admin/credit-card/**").hasRole(UserRole.ADMIN.toString())
+                .mvcMatchers("/admin/account/**/**").hasRole(UserRole.ADMIN.toString())
                 .mvcMatchers("/savings/**").hasAnyRole(UserRole.ADMIN.toString(), UserRole.ACCOUNT_HOLDER.toString())
                 .anyRequest().permitAll();
     }

@@ -1,22 +1,22 @@
 package com.ironhack.demobakingapp.service.impl;
 
 import com.ironhack.demobakingapp.classes.Money;
-import com.ironhack.demobakingapp.classes.Years;
+import com.ironhack.demobakingapp.classes.Time;
+import com.ironhack.demobakingapp.controller.DTO.CheckingDTO;
 import com.ironhack.demobakingapp.controller.DTO.StudentCheckingDTO;
 import com.ironhack.demobakingapp.model.AccountHolder;
 import com.ironhack.demobakingapp.model.Checking;
 import com.ironhack.demobakingapp.model.StudentChecking;
 import com.ironhack.demobakingapp.repository.AccountHolderRepository;
+import com.ironhack.demobakingapp.repository.CheckingRepository;
 import com.ironhack.demobakingapp.repository.StudentCheckingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.Optional;
-
-import static com.ironhack.demobakingapp.service.impl.SavingsService.years;
 
 @Service
 public class StudentCheckingService {
@@ -25,34 +25,46 @@ public class StudentCheckingService {
     private StudentCheckingRepository studentCheckingRepository;
 
     @Autowired
+    private CheckingRepository checkingRepository;
+
+    @Autowired
     private AccountHolderRepository accountHolderRepository;
 
-    public StudentChecking add(StudentCheckingDTO studentCheckingDTO) {
+    public StudentChecking add(CheckingDTO checkingDTO) {
 
-        Optional<AccountHolder> accountHolder = accountHolderRepository.findById(studentCheckingDTO.getPrimaryOwnerId());
-        AccountHolder accountHolder1 = studentCheckingDTO.getSecondaryOwnerId() != null ?
-                accountHolderRepository.findById(studentCheckingDTO.getSecondaryOwnerId()).get() :
+        Optional<AccountHolder> accountHolder = accountHolderRepository.findById(checkingDTO.getPrimaryOwnerId());
+        AccountHolder accountHolder1 = checkingDTO.getSecondaryOwnerId() != null ?
+                accountHolderRepository.findById(checkingDTO.getSecondaryOwnerId()).get() :
                 null;
 
         StudentChecking studentChecking = new StudentChecking();
+        Checking checking = new Checking();
 
-        if (accountHolder.isPresent() && (Years.years(accountHolder.get().getBirthDate()) < 25)) {
-            studentChecking.setBalance(new Money(studentCheckingDTO.getBalance()));
+        if (accountHolder.isPresent() && (Time.years(accountHolder.get().getBirthDate()) < 25)) {
+            studentChecking.setBalance(new Money(checkingDTO.getBalance()));
             studentChecking.setPrimaryOwner(accountHolder.get());
-            studentChecking.setStatus(studentCheckingDTO.getStatus());
-            studentChecking.setSecretKey(studentCheckingDTO.getSecretKey());
+            studentChecking.setStatus(checkingDTO.getStatus());
+            studentChecking.setSecretKey(checkingDTO.getSecretKey());
+            if (accountHolder1 != null) {
+                studentChecking.setSecondaryOwner(accountHolder1);
+            }
+
+            return studentCheckingRepository.save(studentChecking);
 
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The account holder does not exist or you are older than 25");
+            checking.setBalance(new Money(checkingDTO.getBalance()));
+            checking.setPrimaryOwner(accountHolder.get());
+            checking.setStatus(checkingDTO.getStatus());
+            checking.setSecretKey(checkingDTO.getSecretKey());
+            checking.getMonthlyFee();
+            checking.getMinimumBalance();
+
+            if (accountHolder1 != null) {checking.setSecondaryOwner(accountHolder1);}
+
+            return checkingRepository.save(checking);
         }
 
-        if (accountHolder1 != null) {
-            studentChecking.setSecondaryOwner(accountHolder1);
-        }
 
-        return studentCheckingRepository.save(studentChecking);
     }
-
-
 
 }

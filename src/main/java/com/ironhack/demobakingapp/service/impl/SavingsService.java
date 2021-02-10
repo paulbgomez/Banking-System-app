@@ -1,6 +1,7 @@
 package com.ironhack.demobakingapp.service.impl;
 
 import com.ironhack.demobakingapp.classes.Money;
+import com.ironhack.demobakingapp.classes.Time;
 import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
 import com.ironhack.demobakingapp.enums.UserRole;
@@ -76,11 +77,59 @@ public class SavingsService implements ISavingsService {
         return savingsRepository.save(savings);
     }
 
-
-
     public List<Savings> findAll(){ return savingsRepository.findAll();}
     public Savings findById(Long id){return savingsRepository.findById(id).get();}
 
+    public void addInterestRate(Long id){
+        Optional<Savings> savings = savingsRepository.findById(id);
+        Integer year = Time.years(savings.get().getLastFee().toLocalDate());
+
+        if (savings.isPresent() && year >= 1){
+            BigDecimal newInterestRate = savings.get().getBalance().getAmount()
+                    .multiply(savings.get().getInterestRate())
+                    .multiply(new BigDecimal(Time.years(savings.get().getLastFee().toLocalDate())));
+            savings.get().getBalance().increaseAmount(newInterestRate);
+            savings.get().setLastFee(LocalDateTime.now());
+        }
+    }
+
+    public BalanceDTO checkBalance(Long id, String username){
+
+        User user = userRepository.findByUsername(username).get();
+
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(user.getUsername()).get();
+        Savings savings = savingsRepository.findById(id).get();
+        BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
+
+        if(accountHolder.showAccounts().contains(savings)){
+            addInterestRate(id);
+            return balance;
+        } else if (savings.isBelowMinimumBalance()) {
+            savings.getBalance().decreaseAmount(savings.getPenalty());
+            return balance;
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User does not have saving accounts");
+        }
+    }
+
+    public BalanceDTO checkBalanceAdmin(Long id, String username){
+
+        User user = userRepository.findByUsername(username).get();
+
+        Admin admin = adminRepository.findByUsername(user.getUsername());
+        Savings savings = savingsRepository.findById(id).get();
+        BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
+
+        if(admin.getUsername().equals(username)){
+            addInterestRate(id);
+            return balance;
+        } else if (savings.isBelowMinimumBalance()) {
+            savings.getBalance().decreaseAmount(savings.getPenalty());
+            return balance;
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User id does not match Admin permissions");
+        }
+    }
 
     public Savings transformToSavingsFromDTO(SavingsDTO savingsDTO){
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(savingsDTO.getPrimaryOwnerId());
@@ -104,67 +153,11 @@ public class SavingsService implements ISavingsService {
 
             savings.setLastFee(LocalDateTime.now());
         } else {
-            throw new IllegalArgumentException("The account holder does not exist");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The account holder does not exist");
         }
 
         if (accountHolder1 != null) {savings.setSecondaryOwner(accountHolder1);}
 
         return savings;
-    }
-
-    public static Integer years(LocalDateTime date){
-        Integer quantityYears = Period.between(date.toLocalDate(), LocalDate.now()).getYears();
-        return quantityYears;
-    }
-
-    public void addInterestRate(Long id){
-        Optional<Savings> savings = savingsRepository.findById(id);
-        Integer year = Period.between(savings.get().getLastFee().toLocalDate(), LocalDate.now()).getYears();
-
-        if (savings.isPresent() && year >= 1){
-            BigDecimal newInterestRate = savings.get().getBalance().getAmount()
-                    .multiply(savings.get().getInterestRate())
-                    .multiply(new BigDecimal(years(savings.get().getLastFee())));
-            savings.get().getBalance().increaseAmount(newInterestRate);
-            savings.get().setLastFee(LocalDateTime.now());
-        }
-    }
-
-    public BalanceDTO checkBalance(Long id, String username){
-
-        User user = userRepository.findByUsername(username).get();
-
-        AccountHolder accountHolder = accountHolderRepository.findByUsername(user.getUsername()).get();
-        Savings savings = savingsRepository.findById(id).get();
-        BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
-
-        if(accountHolder.showAccounts().contains(savings)){
-            addInterestRate(id);
-            return balance;
-        } else if (savings.isBelowMinimumBalance()) {
-            savings.getBalance().decreaseAmount(savings.getPenalty());
-            return balance;
-        } else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not admin nor have saving accounts");
-        }
-    }
-
-    public BalanceDTO checkBalanceAdmin(Long id, String username){
-
-        User user = userRepository.findByUsername(username).get();
-
-        Admin admin = adminRepository.findByUsername(user.getUsername());
-        Savings savings = savingsRepository.findById(id).get();
-        BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
-
-        if(admin.getUsername().equals(username)){
-            addInterestRate(id);
-            return balance;
-        } else if (savings.isBelowMinimumBalance()) {
-            savings.getBalance().decreaseAmount(savings.getPenalty());
-            return balance;
-        } else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not admin nor have saving accounts");
-        }
     }
 }

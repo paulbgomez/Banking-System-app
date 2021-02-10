@@ -29,7 +29,7 @@ public class Checking extends StudentChecking{
     })
     private final Money monthlyFee = new Money(new BigDecimal(12)) ;
     private boolean belowMinimumBalance;
-    @PastOrPresent
+
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastFee;
@@ -37,10 +37,10 @@ public class Checking extends StudentChecking{
     public Checking() {
     }
 
-    public Checking(Money balance, AccountHolder primaryOwner, Status status, String secretKey, @PastOrPresent LocalDateTime lastFee) {
+    public Checking(Money balance, AccountHolder primaryOwner, Status status, String secretKey) {
         super(balance, primaryOwner, status, secretKey);
-        this.belowMinimumBalance = false;
-        this.lastFee = lastFee;
+        setBelowMinimumBalance(false);
+        setLastFee(LocalDateTime.now());
     }
 
     public Money getMinimumBalance() {

@@ -1,6 +1,7 @@
 package com.ironhack.demobakingapp.service.impl;
 
 import com.ironhack.demobakingapp.classes.Money;
+import com.ironhack.demobakingapp.classes.Time;
 import com.ironhack.demobakingapp.controller.DTO.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.SavingsDTO;
 import com.ironhack.demobakingapp.model.AccountHolder;
@@ -12,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Optional;
 import java.util.Random;
 
@@ -53,16 +58,16 @@ public class CreditCardService {
         return creditCardRepository.save(creditCard);
     }
 
-//    public void addInterestRate(Long id){
-//        Optional<CreditCard> creditCard = creditCardRepository.findById(id);
-//        Integer month = Period.between(creditCard.get().getLastFee().toLocalDate(), LocalDate.now()).getYears();
-//
-//        if (savings.isPresent() && year >= 1){
-//            BigDecimal newInterestRate = savings.get().getBalance().getAmount()
-//                    .multiply(savings.get().getInterestRate())
-//                    .multiply(new BigDecimal(years(savings.get().getLastFee())));
-//            savings.get().getBalance().increaseAmount(newInterestRate);
-//            savings.get().setLastFee(LocalDateTime.now());
-//        }
-//    }
+    public void addInterestRate(Long id){
+        Optional<CreditCard> creditCard = creditCardRepository.findById(id);
+        Integer month = Time.months(creditCard.get().getLastInterestUpdate());
+
+        if (creditCard.isPresent() && month >= 1){
+                BigDecimal calculatedInterest = creditCard.get().getBalance().getAmount()
+                        .multiply(creditCard.get().getInterestRate().divide(new BigDecimal("12"), 2, RoundingMode.HALF_EVEN))
+                        .multiply(new BigDecimal(Time.months(creditCard.get().getLastInterestUpdate())));
+                creditCard.get().getBalance().increaseAmount(calculatedInterest);
+                creditCard.get().setLastInterestUpdate(creditCard.get().getLastInterestUpdate().plusMonths(Time.months(creditCard.get().getLastInterestUpdate())));
+        }
+    }
 }

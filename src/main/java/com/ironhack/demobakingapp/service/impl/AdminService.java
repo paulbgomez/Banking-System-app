@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class AdminService implements IAdminService {
+public class AdminService {
 
     @Autowired
     private AdminRepository adminRepository;
@@ -61,9 +61,4 @@ public class AdminService implements IAdminService {
     }
 
 
-    public void modify(Long id) {
-        Account account = accountRepository.findById(id).get();
-
-
-    }
 }

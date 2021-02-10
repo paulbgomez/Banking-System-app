@@ -1,13 +1,10 @@
 package com.ironhack.demobakingapp.controller.DTO;
 
-import com.ironhack.demobakingapp.enums.Status;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class CreditCardDTO {
     @NotNull(message = "Primary owner cannot be null")
@@ -22,13 +19,16 @@ public class CreditCardDTO {
     @DecimalMax(value = "0.2", message = "The interest rate has to be less than 0.2")
     @DecimalMin(value = "0.1" , message = "The interest rate has to be more than 0.1")
     private BigDecimal interestRate;
+    private LocalDate lastInterestUpdate;
 
-    public CreditCardDTO(@NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000") @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100") BigDecimal creditLimit, @DecimalMax(value = "0.5", message = "The interest rate has to be less than 0.5") @DecimalMin(value = "0", message = "The interest rate has to be more than 0") BigDecimal interestRate) {
+
+    public CreditCardDTO(@NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000") @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100") BigDecimal creditLimit, @DecimalMax(value = "0.5", message = "The interest rate has to be less than 0.5") @DecimalMin(value = "0", message = "The interest rate has to be more than 0") BigDecimal interestRate, LocalDate lastInterestUpdate) {
         setPrimaryOwnerId(primaryOwnerId);
         setSecondaryOwnerId(secondaryOwnerId);
         setBalance(balance);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
+        setLastInterestUpdate(lastInterestUpdate);
     }
 
     public Long getPrimaryOwnerId() {return primaryOwnerId;}
@@ -47,4 +47,12 @@ public class CreditCardDTO {
 
     public BigDecimal getInterestRate() {return interestRate;}
     public void setInterestRate(BigDecimal interestRate) {this.interestRate = interestRate;}
+
+    public LocalDate getLastInterestUpdate() {
+        return lastInterestUpdate;
+    }
+
+    public void setLastInterestUpdate(LocalDate lastInterestUpdate) {
+        this.lastInterestUpdate = lastInterestUpdate;
+    }
 }
