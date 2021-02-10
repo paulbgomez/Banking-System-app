@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class UserDTO {
-    
+
     /** PARAMS **/
 
     @NotEmpty(message = "Name cannot be null")

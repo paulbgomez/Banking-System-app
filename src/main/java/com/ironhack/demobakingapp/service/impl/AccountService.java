@@ -1,18 +1,24 @@
 package com.ironhack.demobakingapp.service.impl;
 
 import com.ironhack.demobakingapp.classes.Money;
+import com.ironhack.demobakingapp.controller.DTO.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.MovementDTO;
 import com.ironhack.demobakingapp.model.*;
+import com.ironhack.demobakingapp.model.Accounts.Account;
+import com.ironhack.demobakingapp.model.Accounts.CreditCard;
+import com.ironhack.demobakingapp.model.Accounts.Savings;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
+import com.ironhack.demobakingapp.model.Users.Admin;
+import com.ironhack.demobakingapp.model.Users.User;
 import com.ironhack.demobakingapp.repository.*;
-import com.ironhack.demobakingapp.service.interfaces.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -25,6 +31,9 @@ public class AccountService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private AdminService adminService;
 
     @Autowired
     private SavingsService savingsService;
@@ -56,7 +65,7 @@ public class AccountService {
 
         User user = userRepository.findByUsername(username).get();
 
-        Admin admin = adminRepository.findByUsername(user.getUsername());
+        Admin admin = adminService.findByUsername(user.getUsername());
 
         if (admin.getUsername().equals(username)) {
             if (typeOfAccount.getClass().equals(Savings.class)){
@@ -82,7 +91,7 @@ public class AccountService {
 
         User user = userRepository.findByUsername(username).get();
 
-        Admin admin = adminRepository.findByUsername(user.getUsername());
+        Admin admin = adminService.findByUsername(user.getUsername());
 
         if (admin.getUsername().equals(username)) {
             if (typeOfAccount.getClass().equals(Savings.class)){
@@ -97,7 +106,7 @@ public class AccountService {
         }
     }
 
-
+    /** Method to transfer money between accounts **/
     public Movement transfer(MovementDTO movementDTO, String username) {
         AccountHolder user = accountHolderRepository.findByUsername(username).get();
         Account originAccount = accountRepository.findById(movementDTO.getSenderAccountId()).get();
@@ -119,5 +128,20 @@ public class AccountService {
         Movement movement = new Movement(originAccount, destinationAccount, amount);
 
         return movementRepository.save(movement);
+    }
+
+    /** Method to check the balance of ALL accounts **/
+    public List<BalanceDTO> checkBalanceAll(Long id, String username){
+        List<BalanceDTO> balanceDTOList = new ArrayList<>();
+        if (adminService.findOptionalAdminById(id).isPresent() && username.equals(adminService.findOptionalAdminById(id).get().getUsername())) {
+            List<Account> accounts = accountRepository.findAll();
+                for (Account account: accounts) {
+                    BalanceDTO balanceDTO = new BalanceDTO(account.getId(), account.getBalance().getAmount(), account.getBalance().getCurrency());
+                    balanceDTOList.add(balanceDTO);
+                }
+        } else {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Admin id not found");
+        }
+        return balanceDTOList;
     }
 }
