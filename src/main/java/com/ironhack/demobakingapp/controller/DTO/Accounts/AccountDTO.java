@@ -13,11 +13,13 @@ public class AccountDTO {
         @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         protected LocalDateTime creationTime;
+        protected boolean isFrozen;
 
 
         /** CONSTRUCTORS **/
 
         public AccountDTO(LocalDateTime creationTime) {
+            setFrozen(false);
             setCreationTime(LocalDateTime.now());
         }
 
@@ -29,5 +31,13 @@ public class AccountDTO {
 
     public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public boolean isFrozen() {
+        return isFrozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        isFrozen = frozen;
     }
 }

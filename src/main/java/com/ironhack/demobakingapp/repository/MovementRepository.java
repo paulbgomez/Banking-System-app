@@ -13,9 +13,8 @@ import java.util.List;
 @Repository
 public interface MovementRepository extends JpaRepository<Movement, Long> {
 
-    /** Order 2 last movements by date **/
-//    @Query( value = "SELECT transference_date FROM movement WHERE sender_account = :id ORDER BY STR_TO_DATE(transference_date,'%Y-%m-%d') DESC LIMIT 2", nativeQuery = true)
-//    List<Movement> orderMovementsLimitTwo(@Param("id") Long id);
+    /** Order last movements by date **/
+    List<Movement> findBySenderAccountIdOrderByTransferenceDateDesc(Long id);
 
     /** Order last movement by date **/
 

@@ -1,5 +1,6 @@
 package com.ironhack.demobakingapp.model.Accounts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -41,9 +42,13 @@ public class Account {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     protected LocalDateTime creationTime;
 
+    protected boolean isFrozen;
+
     @OneToMany(mappedBy = "senderAccount")
+    @JsonIgnore
     protected List<Movement> sentMoney;
     @OneToMany(mappedBy = "receiverAccount")
+    @JsonIgnore
     protected List<Movement> receivedMoney;
 
     /** CONSTRUCTORS **/
@@ -54,9 +59,18 @@ public class Account {
         setBalance(balance);
         setPrimaryOwner(primaryOwner);
         setCreationTime(LocalDateTime.now());
+        setFrozen(false);
     }
 
     /** GETTERS & SETTERS **/
+
+    public boolean isFrozen() {
+        return isFrozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        isFrozen = frozen;
+    }
 
     public LocalDateTime getCreationTime() {
         return creationTime;

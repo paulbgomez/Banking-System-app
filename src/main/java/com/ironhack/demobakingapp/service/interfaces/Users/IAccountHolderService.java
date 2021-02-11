@@ -6,7 +6,7 @@ import com.ironhack.demobakingapp.model.Users.AccountHolder;
 
 public interface IAccountHolderService {
 
-        public AccountHolder add(AccountHolderDTO accountHolderDTO);
-        public AccountHolder findById(Long id);
+        AccountHolder add(AccountHolderDTO accountHolderDTO);
+        AccountHolder findById(Long id);
 
 }

@@ -31,12 +31,12 @@ public class MovementDTO {
     }
 
     /** With Third Parties **/
-//    public MovementDTO(@NotNull(message = "You need to provide a name for the receiver") @NotEmpty String receiverName, String concept, @NotNull(message = "You need to provide a destination account ID") @NotEmpty Long receiverAccount, @NotNull(message = "The amount you need to transfer cannot be null") @NotEmpty BigDecimal amount) {
-//        this.receiverName = receiverName;
-//        this.concept = concept;
-//        this.receiverAccount = receiverAccount;
-//        this.amount = amount;
-//    }
+    public MovementDTO(@NotNull(message = "You need to provide a name for the receiver") @NotEmpty String receiverName, String concept, @NotNull(message = "You need to provide a destination account ID") @NotEmpty Long receiverAccount, @NotNull(message = "The amount you need to transfer cannot be null") @NotEmpty BigDecimal amount) {
+        this.receiverName = receiverName;
+        this.concept = concept;
+        this.receiverAccount = receiverAccount;
+        this.amount = amount;
+    }
 
     /** GETTERS & SETTERS **/
 

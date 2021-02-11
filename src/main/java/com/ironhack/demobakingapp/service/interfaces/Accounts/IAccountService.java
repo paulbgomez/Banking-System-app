@@ -5,5 +5,5 @@ import org.springframework.security.core.Authentication;
 
 public interface IAccountService {
 
-    public Movement transfer(Movement movement, Authentication authentication);
+    Movement transfer(Movement movement, Authentication authentication);
 }

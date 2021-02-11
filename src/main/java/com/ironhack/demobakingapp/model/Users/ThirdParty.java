@@ -21,10 +21,9 @@ public class ThirdParty {
     public ThirdParty() {
     }
 
-    public ThirdParty(Long id, String name, String hashKey) {
-        this.id = id;
-        this.name = name;
-        this.hashKey = hashKey;
+    public ThirdParty(String name, String hashKey) {
+        setName(name);
+        setHashKey(hashKey);
     }
 
     /** GETTERS & SETTERS **/

@@ -3,6 +3,7 @@ package com.ironhack.demobakingapp.service.impl.Accounts;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
+import com.ironhack.demobakingapp.enums.Status;
 import com.ironhack.demobakingapp.model.Accounts.*;
 import com.ironhack.demobakingapp.model.Movement;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
@@ -115,6 +116,7 @@ public class AccountService {
         AccountHolder user = accountHolderRepository.findByUsername(username).get();
 
         Account originAccount = accountRepository.findById(movementDTO.getSenderAccount()).get();
+        Account destinationAccount = accountRepository.findById(movementDTO.getReceiverAccount()).get();
 
         if(!user.showAccounts().contains(originAccount)){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The origin account does not belong to the logged user");
@@ -122,32 +124,35 @@ public class AccountService {
         if(movementDTO.getAmount().compareTo(originAccount.getBalance().getAmount()) > 0 ){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There are not enough funds in the account");
         }
-//        if(!fraudConditionsService.fraudConditions(movementDTO)){
-//            switch (originAccount.getClass().toString().toLowerCase()){
-//                case "savings":
-//                    Savings savings = savingsService.findById(movementDTO.getSenderAccount());
-//                    savings.setStatus(Status.FROZEN);
-//                    break;
-//                case "checking":
-//                    Checking checking = checkingService.findById(movementDTO.getSenderAccount());
-//                    checking.setStatus(Status.FROZEN);
-//                    break;
-//                case "studentchecking":
-//                    StudentChecking studentChecking = studentCheckingService.findById(movementDTO.getSenderAccount());
-//                    studentChecking.setStatus(Status.FROZEN);
-//                    break;
-//                default:
-//                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not allowed to do this. Your credit card won't be charged.");
-//            }
-//            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account has been blocked because of possible fraud. Please contact us at youre-a-scammer@fake.com");
-//        }
-        Account destinationAccount = accountRepository.findById(movementDTO.getReceiverAccount()).get();
+        if(originAccount.isFrozen() || destinationAccount.isFrozen()){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account is FROZEN. So you better let it go ;)");
+        }
+        if(fraudConditionsService.fraudConditions(movementDTO)){
+            switch (originAccount.getClass().getSimpleName().toLowerCase()){
+                case "savings":
+                    Savings savings = savingsService.findById(movementDTO.getSenderAccount());
+                    savings.setStatus(Status.FROZEN);
+                    break;
+                case "checking":
+                    Checking checking = checkingService.findById(movementDTO.getSenderAccount());
+                    checking.setStatus(Status.FROZEN);
+                    break;
+                case "studentchecking":
+                    StudentChecking studentChecking = studentCheckingService.findById(movementDTO.getSenderAccount());
+                    studentChecking.setStatus(Status.FROZEN);
+                    break;
+                default:
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not allowed to do this. Your credit card won't be charged.");
+            }
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account has been blocked because of possible fraud. Please contact us at youre-a-scammer@fake.com");
+        }
+
         Money amount = new Money(movementDTO.getAmount());
 
         originAccount.getBalance().decreaseAmount(amount);
-        //accountRepository.save(originAccount);
+        accountRepository.save(originAccount);
         destinationAccount.getBalance().increaseAmount(amount);
-        //accountRepository.save(destinationAccount);
+        accountRepository.save(destinationAccount);
         Movement movement = new Movement(originAccount, destinationAccount, amount);
 
         return movementRepository.save(movement);

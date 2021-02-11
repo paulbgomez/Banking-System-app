@@ -24,8 +24,12 @@ public class Role {
     }
 
     public Role(UserRole userRole, User user) {
-        this.userRole = userRole;
-        this.user = user;
+        setUserRole(userRole);
+        setUser(user);
+    }
+
+    public Role(UserRole userRole){
+        setUserRole(userRole);
     }
 
     /** GETTERS & SETTERS **/

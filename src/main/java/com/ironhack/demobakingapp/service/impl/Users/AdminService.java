@@ -6,6 +6,7 @@ import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.AdminDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.ThirdPartyDTO;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.Accounts.Account;
 import com.ironhack.demobakingapp.model.Accounts.CreditCard;
@@ -14,6 +15,7 @@ import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
 import com.ironhack.demobakingapp.model.Users.Role;
+import com.ironhack.demobakingapp.model.Users.ThirdParty;
 import com.ironhack.demobakingapp.repository.Users.AdminRepository;
 import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
 import com.ironhack.demobakingapp.service.impl.Accounts.CreditCardService;
@@ -52,6 +54,8 @@ public class AdminService {
     @Autowired
     private AccountHolderService accountHolderService;
 
+    @Autowired
+    private ThirdPartyService thirdPartyService;
 
     public Admin findByUsername(String username){
         return adminRepository.findByUsername(username);
@@ -67,26 +71,6 @@ public class AdminService {
 
     public Optional<Admin> findOptionalAdminById(Long id){
         return adminRepository.findById(id);
-    }
-
-    /** Check balance of any Account with a given ID **/
-    public BalanceDTO checkBalance(Long accountHolderId) {
-        AccountHolder accountHolder = accountHolderService.findById(accountHolderId);
-
-        Set<Account> accountList = accountHolder.showAccounts();
-
-        BalanceDTO balanceDTO = new BalanceDTO();
-
-        if(accountList.size() != 0){
-            for (Account account: accountList) {
-                balanceDTO.setAccountId(account.getId());
-                balanceDTO.setBalanceAmount(account.getBalance().getAmount());
-                balanceDTO.setBalanceCurrency(account.getBalance().getCurrency());
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "This user does not have accounts");
-        }
-        return balanceDTO;
     }
 
     /** Create a Savings Account **/
@@ -138,4 +122,12 @@ public class AdminService {
         }
     }
 
+    /** Create a new Third Party **/
+    public ThirdParty addThirdParty(Long id, ThirdPartyDTO thirdPartyDTO, String username) {
+        if (adminRepository.findById(id).isPresent() && username.equals(adminRepository.findById(id).get().getUsername())) {
+            return thirdPartyService.add(thirdPartyDTO);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The id does not match an Admin Account");
+        }
+    }
 }

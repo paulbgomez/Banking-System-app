@@ -8,14 +8,12 @@ import java.util.List;
 
 public interface ISavingsService {
 
-    public Savings add(SavingsDTO savingsDTO);
-    public List<Savings> findAll();
-    public Savings findById(Long id);
-    public BalanceDTO checkBalance(Long id, String username);
-    public Savings transformToSavingsFromDTO(SavingsDTO savingsDTO);
-    public void addInterestRate(Long id);
+    Savings add(SavingsDTO savingsDTO);
+    List<Savings> findAll();
+    Savings findById(Long id);
+    BalanceDTO checkBalance(Long id, String username);
+    Savings transformToSavingsFromDTO(SavingsDTO savingsDTO);
+    void addInterestRate(Long id);
     BalanceDTO checkBalanceAdmin(Long id, String username);
 
-
-
-    }
+}
