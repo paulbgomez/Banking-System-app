@@ -1,4 +1,4 @@
-package com.ironhack.demobakingapp.controller.DTO.Accounts;
+package com.ironhack.demobakingapp.controller.DTO.Users;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

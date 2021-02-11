@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
@@ -20,7 +21,7 @@ public class AccountController {
 
     @PostMapping("/new-transference/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Movement transfer(@RequestBody MovementDTO movementDTO, Principal principal){
+    public Movement transfer(@RequestBody @Valid MovementDTO movementDTO, Principal principal){
         return accountService.transfer(movementDTO, principal.getName());
     }
 }

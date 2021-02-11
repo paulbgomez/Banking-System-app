@@ -10,7 +10,6 @@ import com.ironhack.demobakingapp.model.Accounts.Account;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -2,19 +2,19 @@ package com.ironhack.demobakingapp.service.impl.Accounts;
 
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.classes.Time;
-import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
+import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
+import com.ironhack.demobakingapp.model.Accounts.Savings;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
-import com.ironhack.demobakingapp.model.Accounts.Savings;
 import com.ironhack.demobakingapp.model.Users.User;
+import com.ironhack.demobakingapp.repository.Accounts.SavingsRepository;
 import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.Users.AdminRepository;
-import com.ironhack.demobakingapp.repository.Accounts.SavingsRepository;
 import com.ironhack.demobakingapp.repository.Users.UserRepository;
 import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
-import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -55,6 +55,7 @@ public class SavingsService implements ISavingsService {
             savings.setPrimaryOwner(accountHolder.get());
             savings.setStatus(savingsDTO.getStatus());
             savings.setSecretKey(savingsDTO.getSecretKey());
+            savings.setCreationTime(LocalDateTime.now());
             savings.setInterestRate(savingsDTO.getInterestRate() != null ?
                     savingsDTO.getInterestRate() :
                     new BigDecimal(0.0025));
@@ -74,6 +75,7 @@ public class SavingsService implements ISavingsService {
 
     public List<Savings> findAll(){ return savingsRepository.findAll();}
     public Savings findById(Long id){return savingsRepository.findById(id).get();}
+    public Savings save(Savings savings){return savingsRepository.save(savings);}
 
     public void addInterestRate(Long id){
         Optional<Savings> savings = savingsRepository.findById(id);

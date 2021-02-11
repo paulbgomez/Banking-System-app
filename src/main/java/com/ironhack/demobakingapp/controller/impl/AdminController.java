@@ -1,12 +1,11 @@
 package com.ironhack.demobakingapp.controller.impl;
 
-import com.ironhack.demobakingapp.controller.DTO.Accounts.AccountHolderDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CheckingDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.AdminDTO;
-import com.ironhack.demobakingapp.controller.DTO.Users.ThirdPartyDTO;
 import com.ironhack.demobakingapp.controller.interfaces.IAdminController;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.Accounts.CreditCard;
@@ -15,12 +14,11 @@ import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
 import com.ironhack.demobakingapp.model.Users.Role;
-import com.ironhack.demobakingapp.model.Users.ThirdParty;
 import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
 import com.ironhack.demobakingapp.service.impl.Accounts.CreditCardService;
-import com.ironhack.demobakingapp.service.impl.Accounts.SavingsService;
 import com.ironhack.demobakingapp.service.impl.Accounts.StudentCheckingService;
 import com.ironhack.demobakingapp.service.impl.Users.AdminService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +26,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,7 +46,7 @@ public class AdminController implements IAdminController {
     private StudentCheckingService studentCheckingService;
 
     @Autowired
-    private SavingsService savingsService;
+    private ISavingsService savingsService;
 
     @Autowired
     private CreditCardService creditCardService;
@@ -151,12 +152,22 @@ public class AdminController implements IAdminController {
     /** PUT REQUESTS **/
 
     /** Increment Balance Amount **/
-    @PutMapping("/admin/account/{id}/{amount}")
+    @PutMapping("/admin/account/increment/{id}/{amount}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void incrementBalance(@PathVariable Long id, @PathVariable BigDecimal amount, Principal principal){
         Optional<Admin> admin = Optional.ofNullable(adminService.findByUsername(principal.getName()));
         if(admin.isPresent()){
             accountService.incrementBalance(id, amount, principal.getName());
+        }
+    }
+
+    /** Decrement Balance Amount **/
+    @PutMapping("/admin/account/decrement/{id}/{amount}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void decrementBalance(@PathVariable Long id, @PathVariable BigDecimal amount, Principal principal){
+        Optional<Admin> admin = Optional.ofNullable(adminService.findByUsername(principal.getName()));
+        if(admin.isPresent()){
+            accountService.decrementBalance(id, amount, principal.getName());
         }
     }
 

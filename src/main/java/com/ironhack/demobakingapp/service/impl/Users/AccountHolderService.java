@@ -1,6 +1,6 @@
 package com.ironhack.demobakingapp.service.impl.Users;
 
-import com.ironhack.demobakingapp.controller.DTO.Accounts.AccountHolderDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Role;
@@ -8,6 +8,7 @@ import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
 import com.ironhack.demobakingapp.service.interfaces.Users.IAccountHolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

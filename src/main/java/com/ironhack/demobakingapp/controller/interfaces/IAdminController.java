@@ -1,6 +1,6 @@
 package com.ironhack.demobakingapp.controller.interfaces;
 
-import com.ironhack.demobakingapp.controller.DTO.Accounts.AccountHolderDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CheckingDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
@@ -11,6 +11,7 @@ import com.ironhack.demobakingapp.model.Accounts.Savings;
 import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
+
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;

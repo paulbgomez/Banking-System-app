@@ -2,21 +2,21 @@ package com.ironhack.demobakingapp.repository;
 
 import com.ironhack.demobakingapp.model.Movement;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface MovementRepository extends JpaRepository<Movement, Long> {
 
-    /** Sum of total money moved by an account by day **/
+    /** Order 2 last movements by date **/
+//    @Query( value = "SELECT transference_date FROM movement WHERE sender_account = :id ORDER BY STR_TO_DATE(transference_date,'%Y-%m-%d') DESC LIMIT 2", nativeQuery = true)
+//    List<Movement> orderMovementsLimitTwo(@Param("id") Long id);
 
-   // SELECT SUM(amount) FROM movement WHERE sender_account = :variable AND transference_date >= now() - INTERVAL 1 DAY;
-    // Aquí no puede ser mas del 150% del SUM
-
-
-
-    /** Sum of movements made by an account in the last second **/
-
-    //Calcular delta last transference - now()
-    // SELECT .... FROM MOVEMENT WHERE sender_account = :variable AND transference_dare <= now() - 1segundo????
+    /** Order last movement by date **/
 
 }

@@ -3,15 +3,17 @@ package com.ironhack.demobakingapp.service.impl.Accounts;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.classes.Time;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CheckingDTO;
-import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Accounts.Checking;
 import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
-import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.repository.Accounts.CheckingRepository;
 import com.ironhack.demobakingapp.repository.Accounts.StudentCheckingRepository;
+import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -26,6 +28,10 @@ public class StudentCheckingService {
     @Autowired
     private AccountHolderRepository accountHolderRepository;
 
+    public StudentChecking findById(Long id){
+        return studentCheckingRepository.findById(id).get();
+    }
+
     public StudentChecking add(CheckingDTO checkingDTO) {
 
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(checkingDTO.getPrimaryOwnerId());
@@ -39,6 +45,7 @@ public class StudentCheckingService {
         if (accountHolder.isPresent() && (Time.years(accountHolder.get().getBirthDate()) < 25)) {
             studentChecking.setBalance(new Money(checkingDTO.getBalance()));
             studentChecking.setPrimaryOwner(accountHolder.get());
+            studentChecking.setCreationTime(LocalDateTime.now());
             studentChecking.setStatus(checkingDTO.getStatus());
             studentChecking.setSecretKey(checkingDTO.getSecretKey());
             if (accountHolder1 != null) {
@@ -50,6 +57,7 @@ public class StudentCheckingService {
         } else {
             checking.setBalance(new Money(checkingDTO.getBalance()));
             checking.setPrimaryOwner(accountHolder.get());
+            checking.setCreationTime(LocalDateTime.now());
             checking.setStatus(checkingDTO.getStatus());
             checking.setSecretKey(checkingDTO.getSecretKey());
             checking.getMonthlyFee();
@@ -59,8 +67,6 @@ public class StudentCheckingService {
 
             return checkingRepository.save(checking);
         }
-
-
     }
 
 }

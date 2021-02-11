@@ -3,23 +3,17 @@ package com.ironhack.demobakingapp.service.impl.Accounts;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
-import com.ironhack.demobakingapp.model.*;
-import com.ironhack.demobakingapp.model.Accounts.Account;
-import com.ironhack.demobakingapp.model.Accounts.CreditCard;
-import com.ironhack.demobakingapp.model.Accounts.Savings;
+import com.ironhack.demobakingapp.model.Accounts.*;
+import com.ironhack.demobakingapp.model.Movement;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
 import com.ironhack.demobakingapp.model.Users.User;
-import com.ironhack.demobakingapp.repository.*;
 import com.ironhack.demobakingapp.repository.Accounts.AccountRepository;
-import com.ironhack.demobakingapp.repository.Accounts.CreditCardRepository;
-import com.ironhack.demobakingapp.repository.Accounts.SavingsRepository;
-import com.ironhack.demobakingapp.repository.Accounts.StudentCheckingRepository;
+import com.ironhack.demobakingapp.repository.MovementRepository;
 import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
-import com.ironhack.demobakingapp.repository.Users.AdminRepository;
 import com.ironhack.demobakingapp.repository.Users.UserRepository;
+import com.ironhack.demobakingapp.service.impl.FraudConditionsService;
 import com.ironhack.demobakingapp.service.impl.Users.AdminService;
-import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,31 +33,25 @@ public class AccountService {
     private AccountHolderRepository accountHolderRepository;
 
     @Autowired
-    private AdminRepository adminRepository;
-
-    @Autowired
     private AdminService adminService;
 
     @Autowired
-    private ISavingsService savingsService;
-
-    @Autowired
-    private SavingsRepository savingsRepository;
+    private SavingsService savingsService;
 
     @Autowired
     private CreditCardService creditCardService;
 
     @Autowired
-    private CreditCardRepository creditCardRepository;
-
-    @Autowired
-    private StudentCheckingRepository studentCheckingRepository;
-
-    @Autowired
     private CheckingService checkingService;
 
     @Autowired
+    private StudentCheckingService studentCheckingService;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FraudConditionsService fraudConditionsService;
 
     @Autowired
     private MovementRepository movementRepository;
@@ -79,18 +67,18 @@ public class AccountService {
 
         if (admin.getUsername().equals(username)) {
             if (typeOfAccount.getClass().equals(Savings.class)){
-                typeOfAccount.getBalance().increaseAmount(amount);
-                System.out.println(typeOfAccount.getBalance().toString() + " SAVINGS");
+                Savings savings = savingsService.findById(id);
+                savings.getBalance().increaseAmount(amount);
                 savingsService.addInterestRate(id);
+                savingsService.save(savings);
             } else if (typeOfAccount.getClass().equals(CreditCard.class)){
-                System.out.println(typeOfAccount.getBalance().toString() + " CREDIT CARD");
-                CreditCard creditCard = creditCardRepository.findById(id).get();
+                CreditCard creditCard = creditCardService.findById(id);
                 creditCard.getBalance().increaseAmount(amount);
-                //typeOfAccount.getBalance().increaseAmount(amount);
                 creditCardService.addInterestRate(id);
+                creditCardService.save(creditCard);
             } else {
-                System.out.println(typeOfAccount.getBalance().toString() + " CHECKING");
                 typeOfAccount.getBalance().increaseAmount(amount);
+                accountRepository.save(typeOfAccount);
             }
         }
     }
@@ -106,13 +94,18 @@ public class AccountService {
 
         if (admin.getUsername().equals(username)) {
             if (typeOfAccount.getClass().equals(Savings.class)){
-                typeOfAccount.setBalance(new Money(typeOfAccount.getBalance().decreaseAmount(amount)));
+                Savings savings = savingsService.findById(id);
+                savings.getBalance().decreaseAmount(amount);
                 savingsService.addInterestRate(id);
+                savingsService.save(savings);
             } else if (typeOfAccount.getClass().equals(CreditCard.class)){
-                typeOfAccount.setBalance(new Money(typeOfAccount.getBalance().decreaseAmount(amount)));
+                CreditCard creditCard = creditCardService.findById(id);
+                creditCard.getBalance().decreaseAmount(amount);
                 creditCardService.addInterestRate(id);
+                creditCardService.save(creditCard);
             } else {
-                typeOfAccount.setBalance(new Money(typeOfAccount.getBalance().decreaseAmount(amount)));
+                typeOfAccount.getBalance().decreaseAmount(amount);
+                accountRepository.save(typeOfAccount);
             }
         }
     }
@@ -120,7 +113,8 @@ public class AccountService {
     /** Method to transfer money between accounts **/
     public Movement transfer(MovementDTO movementDTO, String username) {
         AccountHolder user = accountHolderRepository.findByUsername(username).get();
-        Account originAccount = accountRepository.findById(movementDTO.getSenderAccountId()).get();
+
+        Account originAccount = accountRepository.findById(movementDTO.getSenderAccount()).get();
 
         if(!user.showAccounts().contains(originAccount)){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The origin account does not belong to the logged user");
@@ -128,13 +122,32 @@ public class AccountService {
         if(movementDTO.getAmount().compareTo(originAccount.getBalance().getAmount()) > 0 ){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There are not enough funds in the account");
         }
-        //fraude??
-
-        Account destinationAccount = accountRepository.findById(movementDTO.getReceiverAccountId()).get();
+//        if(!fraudConditionsService.fraudConditions(movementDTO)){
+//            switch (originAccount.getClass().toString().toLowerCase()){
+//                case "savings":
+//                    Savings savings = savingsService.findById(movementDTO.getSenderAccount());
+//                    savings.setStatus(Status.FROZEN);
+//                    break;
+//                case "checking":
+//                    Checking checking = checkingService.findById(movementDTO.getSenderAccount());
+//                    checking.setStatus(Status.FROZEN);
+//                    break;
+//                case "studentchecking":
+//                    StudentChecking studentChecking = studentCheckingService.findById(movementDTO.getSenderAccount());
+//                    studentChecking.setStatus(Status.FROZEN);
+//                    break;
+//                default:
+//                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not allowed to do this. Your credit card won't be charged.");
+//            }
+//            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account has been blocked because of possible fraud. Please contact us at youre-a-scammer@fake.com");
+//        }
+        Account destinationAccount = accountRepository.findById(movementDTO.getReceiverAccount()).get();
         Money amount = new Money(movementDTO.getAmount());
 
         originAccount.getBalance().decreaseAmount(amount);
+        //accountRepository.save(originAccount);
         destinationAccount.getBalance().increaseAmount(amount);
+        //accountRepository.save(destinationAccount);
         Movement movement = new Movement(originAccount, destinationAccount, amount);
 
         return movementRepository.save(movement);
@@ -155,3 +168,5 @@ public class AccountService {
         return balanceDTOList;
     }
 }
+
+

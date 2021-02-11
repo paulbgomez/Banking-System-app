@@ -17,4 +17,10 @@ public class Time {
         return quantityMonths;
     }
 
+    /** Calculate total months between the specified date and now **/
+    public static Integer days(LocalDate date){
+        Integer quantityDays = Period.between(date, LocalDate.now()).getDays();
+        return quantityDays;
+    }
+
 }

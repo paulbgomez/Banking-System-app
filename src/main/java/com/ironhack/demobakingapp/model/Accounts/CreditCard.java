@@ -2,7 +2,9 @@ package com.ironhack.demobakingapp.model.Accounts;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
@@ -10,6 +12,7 @@ import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
@@ -24,8 +27,8 @@ public class CreditCard extends Account{
     })
     private Money creditLimit;
     private BigDecimal interestRate;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastInterestUpdate;
 
     /** CONSTRUCTORS **/
@@ -35,8 +38,9 @@ public class CreditCard extends Account{
 
     public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner);
-        this.creditLimit = creditLimit;
-        this.interestRate = interestRate;
+        setCreditLimit(creditLimit);
+        setInterestRate(interestRate);
+        setLastInterestUpdate(LocalDate.now());
     }
 
     /** GETTERS & SETTERS **/
@@ -64,4 +68,5 @@ public class CreditCard extends Account{
     public void setLastInterestUpdate(LocalDate lastInterestUpdate) {
         this.lastInterestUpdate = lastInterestUpdate;
     }
+
 }

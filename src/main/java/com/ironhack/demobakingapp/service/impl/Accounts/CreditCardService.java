@@ -3,15 +3,17 @@ package com.ironhack.demobakingapp.service.impl.Accounts;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.classes.Time;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
-import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Accounts.CreditCard;
-import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.repository.Accounts.CreditCardRepository;
+import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -37,6 +39,8 @@ public class CreditCardService {
         if (accountHolder.isPresent()){
             creditCard.setBalance(new Money(creditCardDTO.getBalance()));
             creditCard.setPrimaryOwner(accountHolder.get());
+            creditCard.setLastInterestUpdate(LocalDate.now());
+            creditCard.setCreationTime(LocalDateTime.now());
             creditCard.setInterestRate(creditCardDTO.getInterestRate() != null ?
                     creditCardDTO.getInterestRate() :
                     new BigDecimal(0.02));
@@ -53,8 +57,17 @@ public class CreditCardService {
         return creditCardRepository.save(creditCard);
     }
 
+    public CreditCard save(CreditCard creditCard){
+        return creditCardRepository.save(creditCard);
+    }
+
+    public CreditCard findById(Long id){
+        return creditCardRepository.findById(id).get();
+    }
+
     public void addInterestRate(Long id){
         Optional<CreditCard> creditCard = creditCardRepository.findById(id);
+        System.out.println(creditCard.get().getLastInterestUpdate());
         Integer month = Time.months(creditCard.get().getLastInterestUpdate());
         System.out.println(month);
 

@@ -8,43 +8,44 @@ public class MovementDTO {
 
     /** PARAMS **/
 
-    private Long senderAccountId;
+    private Long senderAccount;
     @NotNull(message = "You need to provide a name for the receiver")
-    @NotEmpty
     private String receiverName;
     private String concept;
     @NotNull(message = "You need to provide a destination account ID")
-    @NotEmpty
-    private Long receiverAccountId;
+    private Long receiverAccount;
     @NotNull(message = "The amount you need to transfer cannot be null")
-    @NotEmpty
     private BigDecimal amount;
 
     /** CONSTRUCTORS **/
 
+    public MovementDTO() {
+    }
+
     /** Between Account Holders **/
-    public MovementDTO(Long senderAccountId, String receiverName, Long receiverAccountId, BigDecimal amount) {
-        this.senderAccountId = senderAccountId;
-        this.receiverName = receiverName;
-        this.receiverAccountId = receiverAccountId;
-        this.amount = amount;
+    public MovementDTO(Long senderAccount, @NotNull(message = "You need to provide a name for the receiver")String receiverName, @NotNull(message = "You need to provide a destination account ID")Long receiverAccount, @NotNull(message = "The amount you need to transfer cannot be null")  BigDecimal amount) {
+        setSenderAccount(senderAccount);
+        setReceiverName(receiverName);
+        setReceiverAccount(receiverAccount);
+        setAmount(amount);
     }
+
     /** With Third Parties **/
-    public MovementDTO(String receiverName, String concept, Long receiverAccountId, BigDecimal amount) {
-        this.receiverName = receiverName;
-        this.concept = concept;
-        this.receiverAccountId = receiverAccountId;
-        this.amount = amount;
-    }
+//    public MovementDTO(@NotNull(message = "You need to provide a name for the receiver") @NotEmpty String receiverName, String concept, @NotNull(message = "You need to provide a destination account ID") @NotEmpty Long receiverAccount, @NotNull(message = "The amount you need to transfer cannot be null") @NotEmpty BigDecimal amount) {
+//        this.receiverName = receiverName;
+//        this.concept = concept;
+//        this.receiverAccount = receiverAccount;
+//        this.amount = amount;
+//    }
 
     /** GETTERS & SETTERS **/
 
-    public Long getSenderAccountId() {
-        return senderAccountId;
+    public Long getSenderAccount() {
+        return senderAccount;
     }
 
-    public void setSenderAccountId(Long senderAccountId) {
-        this.senderAccountId = senderAccountId;
+    public void setSenderAccount(Long senderAccount) {
+        this.senderAccount = senderAccount;
     }
 
     public String getReceiverName() {
@@ -63,12 +64,12 @@ public class MovementDTO {
         this.concept = concept;
     }
 
-    public Long getReceiverAccountId() {
-        return receiverAccountId;
+    public Long getReceiverAccount() {
+        return receiverAccount;
     }
 
-    public void setReceiverAccountId(Long receiverAccountId) {
-        this.receiverAccountId = receiverAccountId;
+    public void setReceiverAccount(Long receiverAccount) {
+        this.receiverAccount = receiverAccount;
     }
 
     public BigDecimal getAmount() {

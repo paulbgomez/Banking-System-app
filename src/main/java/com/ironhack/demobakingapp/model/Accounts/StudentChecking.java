@@ -4,7 +4,10 @@ import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.enums.Status;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
-import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Movement;
+import com.ironhack.demobakingapp.model.Users.AccountHolder;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -51,12 +51,21 @@ public class Account {
     }
 
     public Account(Money balance, AccountHolder primaryOwner) {
-        this.balance = balance;
-        this.primaryOwner = primaryOwner;
-        this.creationTime = LocalDateTime.now();
+        setBalance(balance);
+        setPrimaryOwner(primaryOwner);
+        setCreationTime(LocalDateTime.now());
     }
 
     /** GETTERS & SETTERS **/
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(LocalDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
+
     public Long getId() {
         return id;
     }

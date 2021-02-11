@@ -3,11 +3,13 @@ package com.ironhack.demobakingapp.controller.DTO.Accounts;
 import com.ironhack.demobakingapp.enums.Status;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-public class StudentCheckingDTO {
+public class StudentCheckingDTO extends AccountDTO{
 
     /** PARAMS **/
 
@@ -27,7 +29,8 @@ public class StudentCheckingDTO {
 
     /** CONSTRUCTOR **/
 
-    public StudentCheckingDTO(@NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status) {
+    public StudentCheckingDTO(LocalDateTime creationTime, @NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status) {
+        super(creationTime);
         setPrimaryOwnerId(primaryOwnerId);
         setSecondaryOwnerId(secondaryOwnerId);
         setBalance(balance);

@@ -1,6 +1,6 @@
 package com.ironhack.demobakingapp.service.impl.Users;
 
-import com.ironhack.demobakingapp.controller.DTO.Accounts.AccountHolderDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CheckingDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
@@ -17,12 +17,13 @@ import com.ironhack.demobakingapp.model.Users.Role;
 import com.ironhack.demobakingapp.repository.Users.AdminRepository;
 import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
 import com.ironhack.demobakingapp.service.impl.Accounts.CreditCardService;
-import com.ironhack.demobakingapp.service.impl.Accounts.SavingsService;
 import com.ironhack.demobakingapp.service.impl.Accounts.StudentCheckingService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class AdminService {
     private AdminRepository adminRepository;
 
     @Autowired
-    private SavingsService savingsService;
+    private ISavingsService savingsService;
 
     @Autowired
     private StudentCheckingService studentCheckingService;

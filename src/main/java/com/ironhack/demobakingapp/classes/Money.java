@@ -1,8 +1,8 @@
 package com.ironhack.demobakingapp.classes;
 
 import javax.persistence.Embeddable;
-import java.math.RoundingMode;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Currency;
 
 @Embeddable
