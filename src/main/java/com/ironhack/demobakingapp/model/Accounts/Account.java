@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Account {
+    /** PARAMS **/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
@@ -45,9 +46,7 @@ public class Account {
     @OneToMany(mappedBy = "receiverAccount")
     protected List<Movement> receivedMoney;
 
-    /**
-     * Constructors
-     **/
+    /** CONSTRUCTORS **/
     public Account() {
     }
 
@@ -57,9 +56,7 @@ public class Account {
         this.creationTime = LocalDateTime.now();
     }
 
-    /**
-     * Getters & Setters
-     **/
+    /** GETTERS & SETTERS **/
     public Long getId() {
         return id;
     }

@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @PrimaryKeyJoinColumn(name = "id")
 public class Checking extends StudentChecking{
 
+    /** PARAMS **/
+
     @Embedded
     @AttributeOverrides(value ={
             @AttributeOverride(name = "amount", column = @Column(name = "minimum_balance_amount")),
@@ -34,6 +36,8 @@ public class Checking extends StudentChecking{
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastFee;
 
+    /** CONSTRUCTORS **/
+
     public Checking() {
     }
 
@@ -42,6 +46,8 @@ public class Checking extends StudentChecking{
         setBelowMinimumBalance(false);
         setLastFee(LocalDateTime.now());
     }
+
+    /** GETTERS & SETTERS **/
 
     public Money getMinimumBalance() {
         return minimumBalance;

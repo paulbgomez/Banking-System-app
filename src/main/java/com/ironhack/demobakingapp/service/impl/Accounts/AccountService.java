@@ -19,6 +19,7 @@ import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.Users.AdminRepository;
 import com.ironhack.demobakingapp.repository.Users.UserRepository;
 import com.ironhack.demobakingapp.service.impl.Users.AdminService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class AccountService {
     private AdminService adminService;
 
     @Autowired
-    private SavingsService savingsService;
+    private ISavingsService savingsService;
 
     @Autowired
     private SavingsRepository savingsRepository;

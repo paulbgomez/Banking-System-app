@@ -10,9 +10,13 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "id")
 public class StudentChecking extends Account{
 
+    /** PARAMS **/
+
     @Enumerated(EnumType.STRING)
     protected Status status;
     protected String secretKey;
+
+    /** CONSTRUCTORS **/
 
     public StudentChecking() {
     }
@@ -27,6 +31,8 @@ public class StudentChecking extends Account{
         this.status = status;
         this.secretKey = secretKey;
     }
+
+    /** GETTERS & SETTERS **/
 
     public Status getStatus() {
         return status;

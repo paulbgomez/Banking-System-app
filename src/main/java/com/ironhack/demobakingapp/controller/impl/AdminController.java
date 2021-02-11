@@ -6,6 +6,7 @@ import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.AdminDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.ThirdPartyDTO;
 import com.ironhack.demobakingapp.controller.interfaces.IAdminController;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.Accounts.CreditCard;
@@ -14,6 +15,7 @@ import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
 import com.ironhack.demobakingapp.model.Users.Role;
+import com.ironhack.demobakingapp.model.Users.ThirdParty;
 import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
 import com.ironhack.demobakingapp.service.impl.Accounts.CreditCardService;
 import com.ironhack.demobakingapp.service.impl.Accounts.SavingsService;
@@ -138,6 +140,13 @@ public class AdminController implements IAdminController {
     public AccountHolder addAccountHolder(@PathVariable Long id, @RequestBody @Valid AccountHolderDTO accountHolderDTO, Principal principal){
         return adminService.addAccountHolder(id, accountHolderDTO, principal.getName());
     }
+
+//    /** New Third Party **/
+//    @PostMapping("/new/third-party/{id}")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ThirdParty addThirdParty(@PathVariable Long id, @RequestBody @Valid ThirdPartyDTO thirdPartyDTO, Principal principal){
+//        return adminService.addAccountHolder(id, thirdPartyDTO, principal.getName());
+//    }
 
     /** PUT REQUESTS **/
 

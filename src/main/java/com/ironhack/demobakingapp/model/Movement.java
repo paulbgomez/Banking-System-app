@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Movement {
 
+    /** PARAMS **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,9 +36,12 @@ public class Movement {
     private LocalDateTime transferenceDate;
     private String concept;
 
+    /** CONSTRUCTORS **/
+
     public Movement() {
     }
 
+    /** Constructor for regular movements between account holders **/
     public Movement(Account senderAccount, Account receiverAccount, Money quantity) {
         setSenderAccount(senderAccount);
         setReceiverAccount(receiverAccount);
@@ -44,11 +49,14 @@ public class Movement {
         setTransferenceDate(LocalDateTime.now());
     }
 
+    /** Constructor for third party movements  **/
     public Movement(Money quantity, String concept) {
         setQuantity(quantity);
         setConcept(concept);
         setTransferenceDate(LocalDateTime.now());
     }
+
+    /** GETTERS & SETTERS **/
 
     public Long getId() {
         return id;

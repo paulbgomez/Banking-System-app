@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @PrimaryKeyJoinColumn(name = "id")
 public class Savings extends Account{
 
+    /** PARAMS **/
+
     @Enumerated(EnumType.STRING)
     private Status status;
     @Embedded
@@ -31,6 +33,8 @@ public class Savings extends Account{
     private boolean belowMinimumBalance;
     private String secretKey;
 
+    /** CONSTRUCTORS **/
+
     public Savings() {
     }
 
@@ -40,6 +44,8 @@ public class Savings extends Account{
         setBelowMinimumBalance(false);
         setSecretKey(secretKey);
     }
+
+    /** GETTERS & SETTERS **/
 
     public Status getStatus() {
         return status;

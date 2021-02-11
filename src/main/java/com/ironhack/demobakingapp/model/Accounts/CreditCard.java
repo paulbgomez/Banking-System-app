@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @PrimaryKeyJoinColumn(name = "id")
 public class CreditCard extends Account{
 
+    /** PARAMS **/
+
     @Embedded
     @AttributeOverrides(value ={
             @AttributeOverride(name = "amount", column = @Column(name = "credit_limit_amount")),
@@ -26,6 +28,7 @@ public class CreditCard extends Account{
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDate lastInterestUpdate;
 
+    /** CONSTRUCTORS **/
 
     public CreditCard() {
     }
@@ -35,6 +38,8 @@ public class CreditCard extends Account{
         this.creditLimit = creditLimit;
         this.interestRate = interestRate;
     }
+
+    /** GETTERS & SETTERS **/
 
     public Money getCreditLimit() {
         return creditLimit;

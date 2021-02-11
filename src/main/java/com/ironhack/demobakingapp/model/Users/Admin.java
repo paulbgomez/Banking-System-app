@@ -7,6 +7,8 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name="id")
 public class Admin extends User{
 
+    /** CONSTRUCTORS **/
+
     public Admin() {
     }
 

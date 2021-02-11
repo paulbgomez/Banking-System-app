@@ -9,11 +9,15 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class ThirdParty {
 
+    /** PARAMS **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String hashKey;
+
+    /** CONSTRUCTORS **/
 
     public ThirdParty() {
     }
@@ -23,6 +27,8 @@ public class ThirdParty {
         this.name = name;
         this.hashKey = hashKey;
     }
+
+    /** GETTERS & SETTERS **/
 
     public Long getId() {
         return id;

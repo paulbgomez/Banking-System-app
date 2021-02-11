@@ -10,6 +10,8 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
+    /** PARAMS **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
@@ -21,6 +23,8 @@ public class User {
     @JsonIgnore
     protected Set<Role> roles = new HashSet<>();
 
+    /** CONSTRUCTORS **/
+
     public User() {
     }
 
@@ -29,6 +33,7 @@ public class User {
         this.password = password;
         this.username = username;
     }
+    /** GETTERS & SETTERS **/
 
     public Long getId() {
         return id;

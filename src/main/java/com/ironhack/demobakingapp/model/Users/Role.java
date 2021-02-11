@@ -7,6 +7,8 @@ import javax.persistence.*;
 @Entity
 public class Role {
 
+    /** PARAMS **/
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,6 +18,8 @@ public class Role {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
+    /** CONSTRUCTORS **/
+
     public Role() {
     }
 
@@ -23,6 +27,8 @@ public class Role {
         this.userRole = userRole;
         this.user = user;
     }
+
+    /** GETTERS & SETTERS **/
 
     public Long getId() {
         return id;

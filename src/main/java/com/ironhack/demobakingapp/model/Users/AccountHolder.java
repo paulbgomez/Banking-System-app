@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @PrimaryKeyJoinColumn(name = "id")
 public class AccountHolder extends User {
 
+    /** PARAMS **/
+
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
@@ -48,6 +50,8 @@ public class AccountHolder extends User {
     @JsonIgnore
     private Set<Account> secondaryAccounts;
 
+    /** CONSTRUCTORS **/
+
     public AccountHolder() {
     }
 
@@ -59,6 +63,8 @@ public class AccountHolder extends User {
         this.primaryAccounts = new HashSet<>();
         this.secondaryAccounts = new HashSet<>();
     }
+
+    /** GETTERS & SETTERS **/
 
     public LocalDate getBirthDate() {
         return birthDate;
