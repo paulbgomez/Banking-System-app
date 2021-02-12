@@ -137,23 +137,8 @@ public class AccountService {
         if(originAccount.isFrozen() || destinationAccount.isFrozen()){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account is FROZEN. So you better let it go ;)");
         }
-        if(fraudConditionsService.fraudConditions(movementDTO)){
-            switch (originAccount.getClass().getSimpleName().toLowerCase()){
-                case "savings":
-                    Savings savings = savingsService.findById(movementDTO.getSenderAccount());
-                    savings.setStatus(Status.FROZEN);
-                    break;
-                case "checking":
-                    Checking checking = checkingService.findById(movementDTO.getSenderAccount());
-                    checking.setStatus(Status.FROZEN);
-                    break;
-                case "studentchecking":
-                    StudentChecking studentChecking = studentCheckingService.findById(movementDTO.getSenderAccount());
-                    studentChecking.setStatus(Status.FROZEN);
-                    break;
-                default:
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not allowed to do this. Your credit card won't be charged.");
-            }
+        if(fraudConditionsService.fraudConditionSeconds(movementDTO) || fraudConditionsService.fraudConditionMaxMoney(movementDTO)) {
+            originAccount.setFrozen(true);
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account has been blocked because of possible fraud. Please contact us at youre-a-scammer@fake.com");
         }
 
@@ -223,22 +208,11 @@ public class AccountService {
             if (originAccount.get().isFrozen() || destinationAccount.get().isFrozen()) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account is FROZEN. So you better let it go ;)");
             }
-            if (fraudConditionsService.fraudConditions(movementDTO)) {
-                switch (originAccount.getClass().getSimpleName().toLowerCase()) {
-                    case "savings":
-                        Savings savings = savingsService.findById(movementDTO.getSenderAccount());
-                        savings.setStatus(Status.FROZEN);
-                        break;
-                    case "checking":
-                        Checking checking = checkingService.findById(movementDTO.getSenderAccount());
-                        checking.setStatus(Status.FROZEN);
-                        break;
-                    case "studentchecking":
-                        StudentChecking studentChecking = studentCheckingService.findById(movementDTO.getSenderAccount());
-                        studentChecking.setStatus(Status.FROZEN);
-                        break;
-                    default:
-                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not allowed to do this. Your credit card won't be charged.");
+            if (fraudConditionsService.fraudConditionSeconds(movementDTO) || fraudConditionsService.fraudConditionMaxMoney(movementDTO)) {
+                if (originAccount.isPresent()) {
+                    originAccount.get().setFrozen(true);
+                } else {
+                    destinationAccount.get().setFrozen(true);
                 }
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account has been blocked because of possible fraud. Please contact us at youre-a-scammer@fake.com");
             }
