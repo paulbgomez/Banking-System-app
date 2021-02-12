@@ -42,10 +42,10 @@ public class AccountHolder extends User {
             @AttributeOverride(name = "postalCode", column = @Column(name = "primary_address_postal_code"))
     })
     private Address primaryAddress;
-    @OneToMany(mappedBy = "primaryOwner")
+    @OneToMany(mappedBy = "primaryOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Account> primaryAccounts;
-    @OneToMany(mappedBy = "secondaryOwner")
+    @OneToMany(mappedBy = "secondaryOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Account> secondaryAccounts;
 
@@ -104,6 +104,7 @@ public class AccountHolder extends User {
     public void setSecondaryAccounts(Set<Account> secondaryAccounts) {
         this.secondaryAccounts = secondaryAccounts;
     }
+
 
     public Set<Account> showAccounts(){
         Set<Account> result = new HashSet<>();

@@ -3,12 +3,16 @@ package com.ironhack.demobakingapp.service.impl.Accounts;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.classes.Time;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
+import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
 import com.ironhack.demobakingapp.model.Accounts.CreditCard;
+import com.ironhack.demobakingapp.model.Accounts.Savings;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.repository.Accounts.CreditCardRepository;
 import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,13 +30,13 @@ public class CreditCardService {
     @Autowired
     private AccountHolderRepository accountHolderRepository;
 
+    Random random = new Random();
+
     public CreditCard add(CreditCardDTO creditCardDTO){
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(creditCardDTO.getPrimaryOwnerId());
         AccountHolder accountHolder1 = creditCardDTO.getSecondaryOwnerId() != null ?
                 accountHolderRepository.findById(creditCardDTO.getSecondaryOwnerId()).get() :
                 null ;
-
-        Random random = new Random();
 
         CreditCard creditCard = new CreditCard();
 
@@ -78,5 +82,33 @@ public class CreditCardService {
                 creditCard.get().getBalance().increaseAmount(calculatedInterest);
                 creditCard.get().setLastInterestUpdate(creditCard.get().getLastInterestUpdate().plusMonths(Time.months(creditCard.get().getLastInterestUpdate())));
         }
+    }
+
+    public CreditCard transformToCreditCardFromDTO(CreditCardDTO creditCardDTO){
+        Optional<AccountHolder> accountHolder = accountHolderRepository.findById(creditCardDTO.getPrimaryOwnerId());
+        AccountHolder accountHolder1 = creditCardDTO.getSecondaryOwnerId() != null ?
+                accountHolderRepository.findById(creditCardDTO.getSecondaryOwnerId()).get() :
+                null ;
+
+        CreditCard creditCard = new CreditCard();
+
+        if (accountHolder.isPresent()){
+            creditCard.setBalance(new Money(creditCardDTO.getBalance()));
+            creditCard.setPrimaryOwner(accountHolder.get());
+            creditCard.setInterestRate(creditCardDTO.getInterestRate() != null ?
+                    creditCardDTO.getInterestRate() :
+                    new BigDecimal(0.02));
+            creditCard.setCreditLimit(creditCardDTO.getCreditLimit() != null ?
+                    new Money(creditCardDTO.getCreditLimit()) :
+                    new Money(new BigDecimal(random.nextInt(900) + 101)));
+
+            creditCard.setLastInterestUpdate(LocalDate.now());
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The account holder does not exist");
+        }
+
+        if (accountHolder1 != null) {creditCard.setSecondaryOwner(accountHolder1);}
+
+        return creditCard;
     }
 }

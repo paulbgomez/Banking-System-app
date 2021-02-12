@@ -42,6 +42,10 @@ public class AccountHolderService implements IAccountHolderService {
         return accountHolderRepository.getOne(id);
     }
 
+    public AccountHolder findByName(String name){
+        return accountHolderRepository.findByName(name).get();
+    }
+
 
 
 }

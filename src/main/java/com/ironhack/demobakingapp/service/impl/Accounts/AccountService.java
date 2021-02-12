@@ -121,11 +121,15 @@ public class AccountService {
 
     /** Method to transfer money between accounts **/
     public Movement transfer(MovementDTO movementDTO, String username) {
+
         AccountHolder user = accountHolderRepository.findByUsername(username).get();
 
         Account originAccount = accountRepository.findById(movementDTO.getSenderAccount()).get();
         Account destinationAccount = accountRepository.findById(movementDTO.getReceiverAccount()).get();
 
+
+        System.out.println(user.showAccounts().toString());
+        System.out.println(user.getPrimaryAccounts().toString());
         /** Exceptions **/
 
         if(!user.showAccounts().contains(originAccount)){
@@ -144,11 +148,12 @@ public class AccountService {
 
         Money amount = new Money(movementDTO.getAmount());
 
+        Movement movement = new Movement(originAccount, destinationAccount, amount);
+
         originAccount.getBalance().decreaseAmount(amount);
         accountRepository.save(originAccount);
         destinationAccount.getBalance().increaseAmount(amount);
         accountRepository.save(destinationAccount);
-        Movement movement = new Movement(originAccount, destinationAccount, amount);
 
         return movementRepository.save(movement);
     }
@@ -179,8 +184,11 @@ public class AccountService {
         Optional<Account> originAccount = accountRepository.findById(movementDTO.getSenderAccount());
         Optional<Account> destinationAccount = accountRepository.findById(movementDTO.getReceiverAccount());
 
+        System.out.println("AUN NO ENTRE AQUI");
         if (passwordEncoder.matches(hashKey, user.getHashKey())) {
             Movement movement = new Movement();
+
+            System.out.println("Entro Aqui");
 
             /** Transference FROM a Third Party **/
             if (destinationAccount.isPresent()) {

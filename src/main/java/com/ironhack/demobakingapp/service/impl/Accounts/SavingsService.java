@@ -39,14 +39,13 @@ public class SavingsService implements ISavingsService {
     @Autowired
     private AdminRepository adminRepository;
 
+    Random random = new Random();
 
     public Savings add(SavingsDTO savingsDTO){
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(savingsDTO.getPrimaryOwnerId());
         AccountHolder accountHolder1 = savingsDTO.getSecondaryOwnerId() != null ?
                 accountHolderRepository.findById(savingsDTO.getSecondaryOwnerId()).get() :
                 null ;
-
-        Random random = new Random();
 
         Savings savings = new Savings();
 
@@ -93,7 +92,6 @@ public class SavingsService implements ISavingsService {
     public BalanceDTO checkBalance(Long id, String username){
 
         User user = userRepository.findByUsername(username).get();
-
         AccountHolder accountHolder = accountHolderRepository.findByUsername(user.getUsername()).get();
         Savings savings = savingsRepository.findById(id).get();
         BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
@@ -146,7 +144,7 @@ public class SavingsService implements ISavingsService {
                     new BigDecimal(0.0025));
             savings.setMinimumBalance(savingsDTO.getMinimumBalance() != null ?
                     new Money(savingsDTO.getMinimumBalance()) :
-                    new Money(new BigDecimal(Math.random()*1000)));
+                    new Money(new BigDecimal(random.nextInt(900) + 101)));
 
             savings.setLastFee(LocalDateTime.now());
         } else {
@@ -157,4 +155,5 @@ public class SavingsService implements ISavingsService {
 
         return savings;
     }
+
 }
