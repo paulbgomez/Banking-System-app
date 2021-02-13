@@ -46,7 +46,6 @@ public class SavingsService implements ISavingsService {
         AccountHolder accountHolder1 = savingsDTO.getSecondaryOwnerId() != null ?
                 accountHolderRepository.findById(savingsDTO.getSecondaryOwnerId()).get() :
                 null ;
-
         Savings savings = new Savings();
 
         if (accountHolder.isPresent()){
@@ -61,7 +60,6 @@ public class SavingsService implements ISavingsService {
             savings.setMinimumBalance(savingsDTO.getMinimumBalance() != null ?
                     new Money(savingsDTO.getMinimumBalance()) :
                     new Money(new BigDecimal(random.nextInt(900) + 101)));
-
             savings.setLastFee(LocalDateTime.now());
         } else {
             throw new IllegalArgumentException("The account holder does not exist");

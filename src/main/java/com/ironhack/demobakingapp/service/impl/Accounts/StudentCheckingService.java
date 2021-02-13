@@ -51,7 +51,6 @@ public class StudentCheckingService {
             if (accountHolder1 != null) {
                 studentChecking.setSecondaryOwner(accountHolder1);
             }
-
             return studentCheckingRepository.save(studentChecking);
 
         } else {

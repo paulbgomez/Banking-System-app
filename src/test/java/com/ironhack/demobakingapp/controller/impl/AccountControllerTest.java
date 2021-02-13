@@ -306,7 +306,6 @@ class AccountControllerTest {
                         .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
                 .andExpect(status().isCreated()).andReturn();
 
-
     }
 
 }
