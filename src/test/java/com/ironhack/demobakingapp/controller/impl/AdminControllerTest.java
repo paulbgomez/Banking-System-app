@@ -1,18 +1,18 @@
 package com.ironhack.demobakingapp.controller.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ironhack.demobakingapp.classes.Address;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CheckingDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
-import com.ironhack.demobakingapp.controller.DTO.Accounts.StudentCheckingDTO;
-import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.AdminDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.ThirdPartyDTO;
 import com.ironhack.demobakingapp.enums.Status;
 import com.ironhack.demobakingapp.model.Accounts.*;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
+import com.ironhack.demobakingapp.repository.Accounts.AccountRepository;
 import com.ironhack.demobakingapp.repository.Accounts.CreditCardRepository;
 import com.ironhack.demobakingapp.repository.Accounts.SavingsRepository;
 import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
@@ -28,23 +28,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.expression.AbstractSecurityExpressionHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -72,6 +68,9 @@ class AdminControllerTest {
 
     @Autowired
     AdminRepository adminRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @Autowired
     CreditCardRepository creditCardRepository;
@@ -265,14 +264,16 @@ class AdminControllerTest {
 
     @Test
     void checkBalanceAdmin_NotAdminLog_Error() throws Exception {
+        
         Long accountID = accounts.get(1).getId();
+
         String body = objectMapper.writeValueAsString(savingsRepository.findById(accountID));
 
         MvcResult result = mockMvc.perform(
                 get("/admin/savings/check-balance/" + accountID)
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(user("god").password("2121").roles("ADMIN")))
+                        .with(user("fake").password("random").roles("ADMIN")))
                 .andExpect(status().isUnauthorized()).andReturn();
 
     }
@@ -311,7 +312,7 @@ class AdminControllerTest {
                         , address
                 ));
 
-        StudentCheckingDTO checkingDTO = new StudentCheckingDTO(LocalDateTime.now(), tom.getId(), null, new BigDecimal(1000000.50), "xxxx", Status.ACTIVE);
+        CheckingDTO checkingDTO = new CheckingDTO(LocalDateTime.now(), tom.getId(), null, new BigDecimal(1000.50), "xxxx", Status.ACTIVE);
 
         String body = objectMapper.writeValueAsString(checkingDTO);
 
@@ -335,11 +336,10 @@ class AdminControllerTest {
                         , address
                 ));
 
-        StudentChecking checking = studentCheckingService.add(
-                new CheckingDTO(LocalDateTime.now(), tom.getId(), null, new BigDecimal(1000000.50), "xxxx", Status.ACTIVE)
-        );
+        CheckingDTO checkingDTO = new CheckingDTO(LocalDateTime.now(), tom.getId(), null, new BigDecimal(10000.50), "xxxx", Status.ACTIVE);
 
-        String body = objectMapper.writeValueAsString(checking);
+
+        String body = objectMapper.writeValueAsString(checkingDTO);
 
         Long adminId = admin.getId();
 
@@ -361,11 +361,9 @@ class AdminControllerTest {
                         , address
                 ));
 
-        CreditCard creditCard = creditCardService.add(
-                new CreditCardDTO(LocalDateTime.now(), tom.getId(), null, new BigDecimal(1000000.50), null, null)
-        );
+        CreditCardDTO creditCardDTO = new CreditCardDTO(LocalDateTime.now(), tom.getId(), null, new BigDecimal(1000000.50), null, null);
 
-        String body = objectMapper.writeValueAsString(creditCard);
+        String body = objectMapper.writeValueAsString(creditCardDTO);
 
         Long adminId = admin.getId();
 
@@ -378,22 +376,85 @@ class AdminControllerTest {
     }
 
     @Test
-    void addAdmin() {
+    void addAdmin() throws Exception {
+        AdminDTO adminRandom = new AdminDTO("random", "random", "random");
+
+        String body = objectMapper.writeValueAsString(adminRandom);
+
+        Long adminId = admin.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/new/admin/" + adminId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("god").password("2020").roles("ADMIN")))
+                .andExpect(status().isCreated()).andReturn();
     }
 
     @Test
-    void addAccountHolder() {
+    void addAccountHolder() throws Exception {
+        Address address = new Address("Philadelphia", "Fake Street 123", "Pennsylvania", "USA", "ZP886F");
+
+        AccountHolderDTO tom = new AccountHolderDTO("Tom Brady", "lotr", "7ringsLikeAriana", LocalDate.of(2000, 12, 07), address, address);
+
+        String body = objectMapper.writeValueAsString(tom);
+
+        Long adminId = admin.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/new/account-holder/" + adminId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("god").password("2020").roles("ADMIN")))
+                .andExpect(status().isCreated()).andReturn();
     }
 
     @Test
-    void addThirdParty() {
+    void addThirdParty() throws Exception {
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO("Tom Brady", "7ringsLikeAriana");
+
+        String body = objectMapper.writeValueAsString(thirdPartyDTO);
+
+        Long adminId = admin.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/new/third-party/" + adminId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("god").password("2020").roles("ADMIN")))
+                .andExpect(status().isCreated()).andReturn();
     }
 
     @Test
-    void incrementBalance() {
+    void incrementBalance() throws Exception {
+
+        Long accountId = accounts.get(0).getId();
+
+        String body = objectMapper.writeValueAsString(accounts.get(0));
+
+        MvcResult result = mockMvc.perform(
+                put("/admin/account/increment/" + accountId + "/" + new BigDecimal(1000).toPlainString())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("god").password("2020").roles("ADMIN")))
+                .andExpect(status().isNoContent()).andReturn();
+
+        assertTrue((new BigDecimal(6000.50).compareTo(accountRepository.findById(accountId).get().getBalance().getAmount())) == 0);
     }
 
     @Test
-    void decrementBalance() {
+    void decrementBalance() throws Exception {
+        Long accountId = accounts.get(0).getId();
+
+        String body = objectMapper.writeValueAsString(accounts.get(0));
+
+        MvcResult result = mockMvc.perform(
+                put("/admin/account/decrement/" + accountId + "/" + new BigDecimal(1000).toPlainString())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("god").password("2020").roles("ADMIN")))
+                .andExpect(status().isNoContent()).andReturn();
+
+        assertTrue((new BigDecimal(4000.50).compareTo(accountRepository.findById(accountId).get().getBalance().getAmount())) == 0);
     }
 }

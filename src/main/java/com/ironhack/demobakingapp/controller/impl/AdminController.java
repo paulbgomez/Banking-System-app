@@ -113,17 +113,6 @@ public class AdminController implements IAdminController {
         return adminService.addAdmin(id, adminDTO, principal.getName());
     }
 
-    /** New Admin For FREE**/
-    @PostMapping("/for-free/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Admin ass(@RequestBody AdminDTO adminDTO){
-        Admin admin = new Admin(adminDTO.getName(), adminDTO.getPassword(), adminDTO.getUsername());
-            Role role = new Role(UserRole.ADMIN, admin);
-            Set<Role> roles = Stream.of(role).collect(Collectors.toCollection(HashSet::new));
-            admin.setRoles(roles);
-            return adminService.save(admin);
-    }
-
     /** New Account Holder **/
     @PostMapping("/new/account-holder/{id}")
     @ResponseStatus(HttpStatus.CREATED)

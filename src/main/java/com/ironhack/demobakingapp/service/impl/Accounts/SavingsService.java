@@ -107,13 +107,11 @@ public class SavingsService implements ISavingsService {
 
     public BalanceDTO checkBalanceAdmin(Long id, String username){
 
-        User user = userRepository.findByUsername(username).get();
-
-        Admin admin = adminRepository.findByUsername(user.getUsername());
+        Admin admin = adminRepository.findByUsername(username);
         Savings savings = savingsRepository.findById(id).get();
         BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
 
-        if(admin.getUsername().equals(username)){
+        if(admin.getUsername().equals(username) && admin!=null){
             addInterestRate(id);
             return balance;
         } else if (savings.isBelowMinimumBalance()) {

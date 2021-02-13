@@ -14,17 +14,13 @@ public class StudentCheckingDTO extends AccountDTO{
     /** PARAMS **/
 
     @NotNull(message = "You need at least one primary owner ID")
-    @NotEmpty
     private Long primaryOwnerId;
     private Long secondaryOwnerId;
     @NotNull(message = "Balance cannot be null")
-    @NotEmpty
     private BigDecimal balance;
     @NotNull(message = "Secret key cannot be null")
-    @NotEmpty
     private String secretKey;
     @NotNull(message = "Status cannot be null")
-    @NotEmpty
     private Status status;
 
     /** CONSTRUCTOR **/

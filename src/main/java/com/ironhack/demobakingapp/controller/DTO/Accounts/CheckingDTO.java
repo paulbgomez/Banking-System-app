@@ -21,7 +21,6 @@ public class CheckingDTO extends AccountDTO{
     private Long primaryOwnerId;
     private Long secondaryOwnerId;
     @NotNull(message = "Balance cannot be null")
-    @NotEmpty
     private BigDecimal balance;
     @NotNull(message = "Secretkey cannot be null")
     private String secretKey;

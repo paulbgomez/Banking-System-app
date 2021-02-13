@@ -53,9 +53,6 @@ public interface IAdminController {
     /** New Admin **/
     Admin addAdmin(Long id, AdminDTO adminDTO, Principal principal);
 
-    /** New Admin For FREE**/
-    Admin ass(AdminDTO adminDTO);
-
     /** New Account Holder **/
     AccountHolder addAccountHolder(Long id, AccountHolderDTO accountHolderDTO, Principal principal);
 
