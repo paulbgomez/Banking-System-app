@@ -17,6 +17,11 @@ import com.ironhack.demobakingapp.repository.Users.ThirdPartyRepository;
 import com.ironhack.demobakingapp.repository.Users.UserRepository;
 import com.ironhack.demobakingapp.service.impl.FraudConditionsService;
 import com.ironhack.demobakingapp.service.impl.Users.AdminService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.IAccountService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ICreditCardService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.IStudentCheckingService;
+import com.ironhack.demobakingapp.service.interfaces.Users.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AccountService {
+public class AccountService implements IAccountService {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -39,19 +44,19 @@ public class AccountService {
     private AccountHolderRepository accountHolderRepository;
 
     @Autowired
-    private AdminService adminService;
+    private IAdminService adminService;
 
     @Autowired
-    private SavingsService savingsService;
+    private ISavingsService savingsService;
 
     @Autowired
-    private CreditCardService creditCardService;
+    private ICreditCardService creditCardService;
 
     @Autowired
     private CheckingService checkingService;
 
     @Autowired
-    private StudentCheckingService studentCheckingService;
+    private IStudentCheckingService studentCheckingService;
 
     @Autowired
     private UserRepository userRepository;

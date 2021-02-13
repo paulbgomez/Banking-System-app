@@ -9,6 +9,7 @@ import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.repository.Accounts.CheckingRepository;
 import com.ironhack.demobakingapp.repository.Accounts.StudentCheckingRepository;
 import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.IStudentCheckingService;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class StudentCheckingService {
+public class StudentCheckingService implements IStudentCheckingService {
 
     @Autowired
     private StudentCheckingRepository studentCheckingRepository;

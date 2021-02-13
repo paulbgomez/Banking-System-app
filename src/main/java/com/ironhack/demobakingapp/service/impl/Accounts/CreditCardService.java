@@ -9,6 +9,7 @@ import com.ironhack.demobakingapp.model.Accounts.Savings;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.repository.Accounts.CreditCardRepository;
 import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ICreditCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-public class CreditCardService {
+public class CreditCardService implements ICreditCardService {
 
     @Autowired
     private CreditCardRepository creditCardRepository;

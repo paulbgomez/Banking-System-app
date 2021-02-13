@@ -20,7 +20,11 @@ import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
 import com.ironhack.demobakingapp.service.impl.Accounts.CreditCardService;
 import com.ironhack.demobakingapp.service.impl.Accounts.StudentCheckingService;
 import com.ironhack.demobakingapp.service.impl.Users.AdminService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.IAccountService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.ICreditCardService;
 import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.IStudentCheckingService;
+import com.ironhack.demobakingapp.service.interfaces.Users.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -39,19 +43,19 @@ import java.util.stream.Stream;
 public class AdminController implements IAdminController {
 
     @Autowired
-    private AdminService adminService;
+    private IAdminService adminService;
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @Autowired
-    private StudentCheckingService studentCheckingService;
+    private IStudentCheckingService studentCheckingService;
 
     @Autowired
     private ISavingsService savingsService;
 
     @Autowired
-    private CreditCardService creditCardService;
+    private ICreditCardService creditCardService;
 
     /** GET REQUEST **/
 

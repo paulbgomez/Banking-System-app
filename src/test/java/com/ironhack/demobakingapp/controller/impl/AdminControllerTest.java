@@ -264,7 +264,7 @@ class AdminControllerTest {
 
     @Test
     void checkBalanceAdmin_NotAdminLog_Error() throws Exception {
-        
+
         Long accountID = accounts.get(1).getId();
 
         String body = objectMapper.writeValueAsString(savingsRepository.findById(accountID));
@@ -426,7 +426,7 @@ class AdminControllerTest {
     }
 
     @Test
-    void incrementBalance() throws Exception {
+    void incrementBalance_AdminLog_Ok() throws Exception {
 
         Long accountId = accounts.get(0).getId();
 
@@ -443,7 +443,7 @@ class AdminControllerTest {
     }
 
     @Test
-    void decrementBalance() throws Exception {
+    void decrementBalance_AdminLog_Ok() throws Exception {
         Long accountId = accounts.get(0).getId();
 
         String body = objectMapper.writeValueAsString(accounts.get(0));

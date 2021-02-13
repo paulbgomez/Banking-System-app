@@ -1,8 +1,10 @@
 package com.ironhack.demobakingapp.controller.impl;
 
 import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
+import com.ironhack.demobakingapp.controller.interfaces.IAccountController;
 import com.ironhack.demobakingapp.model.Movement;
 import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +13,10 @@ import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
-public class AccountController {
+public class AccountController implements IAccountController {
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     /** POST REQUEST **/
 
