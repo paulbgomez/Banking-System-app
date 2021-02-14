@@ -1,13 +1,14 @@
-package com.ironhack.demobakingapp.model;
+package com.ironhack.demobakingapp.model.Users;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class ThirdParty {
+
+    /** PARAMS **/
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,14 +16,17 @@ public class ThirdParty {
     private String name;
     private String hashKey;
 
+    /** CONSTRUCTORS **/
+
     public ThirdParty() {
     }
 
-    public ThirdParty(Long id, String name, String hashKey) {
-        this.id = id;
-        this.name = name;
-        this.hashKey = hashKey;
+    public ThirdParty(String name, String hashKey) {
+        setName(name);
+        setHashKey(hashKey);
     }
+
+    /** GETTERS & SETTERS **/
 
     public Long getId() {
         return id;
