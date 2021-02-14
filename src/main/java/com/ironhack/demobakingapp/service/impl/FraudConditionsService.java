@@ -54,7 +54,6 @@ public class FraudConditionsService {
                movementRepository.maxMoneyOneDay(movementDTO.getSenderAccount()) == null){
            return false;
        } else {
-
            BigDecimal maxMoney24Hours = movementRepository.moneyLastDay(movementDTO.getSenderAccount()).add(movementDTO.getAmount());
            BigDecimal maxMoneyDayMultiply150 = movementRepository.maxMoneyOneDay(movementDTO.getSenderAccount()).multiply(new BigDecimal(1.5));
 

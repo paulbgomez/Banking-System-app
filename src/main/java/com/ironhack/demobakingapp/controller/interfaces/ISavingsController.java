@@ -7,6 +7,7 @@ import java.security.Principal;
 
 public interface ISavingsController {
 
+    /** GET REQUEST **/
      BalanceDTO checkBalance(Long id, Principal principal);
 
     }

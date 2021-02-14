@@ -11,21 +11,25 @@ import com.ironhack.demobakingapp.model.Users.Admin;
 import com.ironhack.demobakingapp.model.Users.ThirdParty;
 import com.ironhack.demobakingapp.model.Users.User;
 import com.ironhack.demobakingapp.repository.Accounts.AccountRepository;
+import com.ironhack.demobakingapp.repository.Accounts.CheckingRepository;
+import com.ironhack.demobakingapp.repository.Accounts.CreditCardRepository;
+import com.ironhack.demobakingapp.repository.Accounts.SavingsRepository;
 import com.ironhack.demobakingapp.repository.MovementRepository;
 import com.ironhack.demobakingapp.repository.Users.AccountHolderRepository;
 import com.ironhack.demobakingapp.repository.Users.ThirdPartyRepository;
 import com.ironhack.demobakingapp.repository.Users.UserRepository;
 import com.ironhack.demobakingapp.service.impl.FraudConditionsService;
 import com.ironhack.demobakingapp.service.impl.Users.AdminService;
-import com.ironhack.demobakingapp.service.interfaces.Accounts.IAccountService;
-import com.ironhack.demobakingapp.service.interfaces.Accounts.ICreditCardService;
-import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
-import com.ironhack.demobakingapp.service.interfaces.Accounts.IStudentCheckingService;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.*;
+import com.ironhack.demobakingapp.service.interfaces.IMovementService;
+import com.ironhack.demobakingapp.service.interfaces.Users.IAccountHolderService;
 import com.ironhack.demobakingapp.service.interfaces.Users.IAdminService;
+import com.ironhack.demobakingapp.service.interfaces.Users.IThirdPartyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -41,7 +45,16 @@ public class AccountService implements IAccountService {
     private AccountRepository accountRepository;
 
     @Autowired
-    private AccountHolderRepository accountHolderRepository;
+    private CheckingRepository checkingRepository;
+
+    @Autowired
+    private SavingsRepository savingsRepository;
+
+    @Autowired
+    private CreditCardRepository creditCardRepository;
+
+    @Autowired
+    private IAccountHolderService accountHolderService;
 
     @Autowired
     private IAdminService adminService;
@@ -53,10 +66,10 @@ public class AccountService implements IAccountService {
     private ICreditCardService creditCardService;
 
     @Autowired
-    private CheckingService checkingService;
+    private IStudentCheckingService studentCheckingService;
 
     @Autowired
-    private IStudentCheckingService studentCheckingService;
+    private ICheckingService checkingService;
 
     @Autowired
     private UserRepository userRepository;
@@ -65,10 +78,10 @@ public class AccountService implements IAccountService {
     private FraudConditionsService fraudConditionsService;
 
     @Autowired
-    private MovementRepository movementRepository;
+    private IMovementService movementService;
 
     @Autowired
-    private ThirdPartyRepository thirdPartyRepository;
+    private IThirdPartyService thirdPartyService;
 
     /** @Admin method to increment the balance of an account **/
     public void incrementBalance(Long id, BigDecimal amount, String username){
@@ -127,14 +140,11 @@ public class AccountService implements IAccountService {
     /** Method to transfer money between accounts **/
     public Movement transfer(MovementDTO movementDTO, String username) {
 
-        AccountHolder user = accountHolderRepository.findByUsername(username).get();
+        AccountHolder user = accountHolderService.findByUsername(username);
 
         Account originAccount = accountRepository.findById(movementDTO.getSenderAccount()).get();
         Account destinationAccount = accountRepository.findById(movementDTO.getReceiverAccount()).get();
 
-
-        System.out.println(user.showAccounts().toString());
-        System.out.println(user.getPrimaryAccounts().toString());
         /** Exceptions **/
 
         if(!user.showAccounts().contains(originAccount)){
@@ -143,12 +153,15 @@ public class AccountService implements IAccountService {
         if(movementDTO.getAmount().compareTo(originAccount.getBalance().getAmount()) > 0 ){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There are not enough funds in the account");
         }
-        if(originAccount.isFrozen() || destinationAccount.isFrozen()){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account is FROZEN. So you better let it go ;)");
-        }
-        if(fraudConditionsService.fraudConditionSeconds(movementDTO) || fraudConditionsService.fraudConditionMaxMoney(movementDTO)) {
+        if (fraudConditionsService.fraudConditionSeconds(movementDTO) || fraudConditionsService.fraudConditionMaxMoney(movementDTO)) {
             originAccount.setFrozen(true);
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account has been blocked because of possible fraud. Please contact us at youre-a-scammer@fake.com");
+            originAccount.blockAccount();
+            destinationAccount.setFrozen(true);
+            destinationAccount.blockAccount();
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your account has been frozen for possible fraud.");
+        }
+        if(originAccount.isFrozen() || destinationAccount.isFrozen() || originAccount.getStatus().equals(Status.FROZEN) || destinationAccount.getStatus().equals(Status.FROZEN)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account is frozen at the moment. You are not allowed to make transferences.");
         }
 
         Money amount = new Money(movementDTO.getAmount());
@@ -160,7 +173,7 @@ public class AccountService implements IAccountService {
         destinationAccount.getBalance().increaseAmount(amount);
         accountRepository.save(destinationAccount);
 
-        return movementRepository.save(movement);
+        return movementService.save(movement);
     }
 
     /** Method to check the balance of ALL accounts **/
@@ -179,62 +192,117 @@ public class AccountService implements IAccountService {
     }
 
     /** Method to transfer with one Third Party **/
-    public Movement transferToThirdParty(String name, String hashKey, MovementDTO movementDTO, String username) {
+    public Movement transferFromThirdParty(String name, String hashKey, MovementDTO movementDTO) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         Money amount = new Money(movementDTO.getAmount());
 
-        ThirdParty user = thirdPartyRepository.findByName(name);
+        ThirdParty user = thirdPartyService.findByName(name);
 
-        Optional<Account> originAccount = accountRepository.findById(movementDTO.getSenderAccount());
         Optional<Account> destinationAccount = accountRepository.findById(movementDTO.getReceiverAccount());
 
-        System.out.println("AUN NO ENTRE AQUI");
         if (passwordEncoder.matches(hashKey, user.getHashKey())) {
             Movement movement = new Movement();
 
-            System.out.println("Entro Aqui");
-
-            /** Transference FROM a Third Party **/
-            if (destinationAccount.isPresent()) {
-                destinationAccount.get().getBalance().increaseAmount(amount);
-                accountRepository.save(destinationAccount.get());
-                movement.setQuantity(new Money(movementDTO.getAmount()));
-                movement.setConcept(movementDTO.getConcept());
-            }
-
-            /** Transference TO a Third Party **/
-            if (originAccount.isPresent()) {
-                AccountHolder accountHolder = accountHolderRepository.findByUsername(username).get();
-                if(accountHolder.showAccounts().contains(originAccount)){
-                    originAccount.get().getBalance().decreaseAmount(amount);
-                    accountRepository.save(originAccount.get());
-                    movement.setQuantity(new Money(movementDTO.getAmount()));
-                    movement.setConcept(movementDTO.getConcept());
-                }
-            }
-
             /** Exceptions **/
-            if (movementDTO.getAmount().compareTo(originAccount.get().getBalance().getAmount()) > 0) {
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There are not enough funds in the account");
-            }
-            if (originAccount.get().isFrozen() || destinationAccount.get().isFrozen()) {
+            if (destinationAccount.get().isFrozen() || destinationAccount.get().getStatus() == Status.FROZEN) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account is FROZEN. So you better let it go ;)");
             }
             if (fraudConditionsService.fraudConditionSeconds(movementDTO) || fraudConditionsService.fraudConditionMaxMoney(movementDTO)) {
-                if (originAccount.isPresent()) {
-                    originAccount.get().setFrozen(true);
-                } else {
                     destinationAccount.get().setFrozen(true);
-                }
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your account has been blocked because of possible fraud. Please contact us at youre-a-scammer@fake.com");
+                    destinationAccount.get().blockAccount();
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account has been frozen for possible fraud.");
             }
-            return movementRepository.save(movement);
+            /** Transference FROM a Third Party **/
+            destinationAccount.get().getBalance().increaseAmount(amount);
+            accountRepository.save(destinationAccount.get());
+            movement.setQuantity(new Money(movementDTO.getAmount()));
+            movement.setConcept(movementDTO.getConcept());
+            return movementService.save(movement);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your hash key is  not correct. Please try again");
         }
     }
 
+
+    /** Method to transfer with one Third Party **/
+    public Movement transferToThirdParty(String name, String hashKey, MovementDTO movementDTO, String username) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        Money amount = new Money(movementDTO.getAmount());
+
+        ThirdParty user = thirdPartyService.findByName(name);
+
+        Optional<Account> originAccount = accountRepository.findById(movementDTO.getSenderAccount());
+
+        if (passwordEncoder.matches(hashKey, user.getHashKey())) {
+            Movement movement = new Movement();
+
+            /** Exceptions **/
+            if (movementDTO.getAmount().compareTo(originAccount.get().getBalance().getAmount()) > 0) {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There are not enough funds in the account");
+            }
+            if (originAccount.get().isFrozen()) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account is FROZEN. So you better let it go ;)");
+            }
+            if (fraudConditionsService.fraudConditionSeconds(movementDTO) || fraudConditionsService.fraudConditionMaxMoney(movementDTO)) {
+                originAccount.get().setFrozen(true);
+                originAccount.get().blockAccount();
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your//Their account has been frozen for possible fraud.");
+            }
+            /** Transference TO a Third Party **/
+            AccountHolder accountHolder = accountHolderService.findByUsername(username);
+            if(accountHolder.isOwner(originAccount.get().getId())){
+                originAccount.get().getBalance().decreaseAmount(amount);
+                accountRepository.save(originAccount.get());
+                movement.setQuantity(new Money(movementDTO.getAmount()));
+                movement.setConcept(movementDTO.getConcept());
+                return movementService.save(movement);
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your user is not correct!");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your hash key is  not correct. Please try again");
+        }
+    }
+
+    /** Check Balance **/
+
+    public BalanceDTO checkBalance(Long id, String username){
+
+        User user = userRepository.findByUsername(username).get();
+        AccountHolder accountHolder = accountHolderService.findByUsername(user.getUsername());
+        Account account = accountRepository.findById(id).get();
+        BalanceDTO balance = new BalanceDTO(id, account.getBalance().getAmount(), account.getBalance().getCurrency());
+
+        if(accountHolder.isOwner(id)){
+            if(account instanceof Savings){
+                savingsService.addInterestRate(id);
+                Savings savings = savingsService.findById(id);
+                if ((savings.getMinimumBalance().getAmount().compareTo(savings.getBalance().getAmount()) == 1) && !savings.isBelowMinimumBalance()){
+                    savings.setBelowMinimumBalance(true);
+                    savings.getBalance().decreaseAmount(savings.getPenalty());
+                }
+                savingsRepository.save(savings);
+            }
+            if(account instanceof CreditCard){
+                creditCardService.addInterestRate(id);
+                creditCardRepository.save((CreditCard) account);
+            }
+            if(account instanceof Checking){
+                checkingService.applyMonthlyFee(id);
+                Checking checking = checkingService.findById(id);
+                if ((checking.getMinimumBalance().getAmount().compareTo(checking.getBalance().getAmount()) == 1) && !checking.isBelowMinimumBalance()){
+                    checking.setBelowMinimumBalance(true);
+                    checking.getBalance().decreaseAmount(checking.getPenalty());
+                }
+                checkingRepository.save(checking);
+            }
+            return balance;
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User does not have saving accounts");
+        }
+    }
 
 }
 

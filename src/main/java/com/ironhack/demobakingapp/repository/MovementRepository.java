@@ -23,4 +23,5 @@ public interface MovementRepository extends JpaRepository<Movement, Long> {
     /** Money transferred by an account in the last 24 hours **/
     @Query(value = "SELECT SUM(quantity_amount) AS sum FROM movement WHERE sender_account = :id AND transference_date >= NOW() - INTERVAL 1 DAY", nativeQuery = true)
     BigDecimal moneyLastDay(@Param("id") Long id);
+
 }

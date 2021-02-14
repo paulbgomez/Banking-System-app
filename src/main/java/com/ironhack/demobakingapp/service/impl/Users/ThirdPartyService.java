@@ -7,6 +7,7 @@ import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Role;
 import com.ironhack.demobakingapp.model.Users.ThirdParty;
 import com.ironhack.demobakingapp.repository.Users.ThirdPartyRepository;
+import com.ironhack.demobakingapp.service.interfaces.Users.IThirdPartyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class ThirdPartyService {
+public class ThirdPartyService implements IThirdPartyService {
 
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
@@ -31,5 +32,9 @@ public class ThirdPartyService {
         Set<Role> roles = Stream.of(role).collect(Collectors.toCollection(HashSet::new));
         thirdPartyRepository.save(thirdParty);
         return thirdParty;
+    }
+
+    public ThirdParty findByName(String name){
+        return thirdPartyRepository.findByName(name);
     }
 }

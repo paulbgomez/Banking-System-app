@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
+import com.ironhack.demobakingapp.enums.Status;
 import com.ironhack.demobakingapp.model.Movement;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 
@@ -44,6 +45,9 @@ public class Account {
 
     protected boolean isFrozen;
 
+    @Enumerated(EnumType.STRING)
+    protected Status status;
+
     @OneToMany(mappedBy = "senderAccount")
     @JsonIgnore
     protected List<Movement> sentMoney;
@@ -60,9 +64,19 @@ public class Account {
         setPrimaryOwner(primaryOwner);
         setCreationTime(LocalDateTime.now());
         setFrozen(false);
+        setStatus(Status.ACTIVE);
     }
 
+
     /** GETTERS & SETTERS **/
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
 
     public boolean isFrozen() {
         return isFrozen;
@@ -130,6 +144,12 @@ public class Account {
 
     public void setReceivedMoney(List<Movement> receivedMoney) {
         this.receivedMoney = receivedMoney;
+    }
+
+    public void blockAccount(){
+        if(isFrozen){
+            this.setStatus(Status.FROZEN);
+        }
     }
 }
 

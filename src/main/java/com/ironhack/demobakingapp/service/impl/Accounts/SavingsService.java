@@ -47,23 +47,21 @@ public class SavingsService implements ISavingsService {
                 accountHolderRepository.findById(savingsDTO.getSecondaryOwnerId()).get() :
                 null ;
         Savings savings = new Savings();
-
-        if (accountHolder.isPresent()){
-            savings.setBalance(new Money(savingsDTO.getBalance()));
-            savings.setPrimaryOwner(accountHolder.get());
-            savings.setStatus(savingsDTO.getStatus());
-            savings.setSecretKey(savingsDTO.getSecretKey());
-            savings.setCreationTime(LocalDateTime.now());
-            savings.setInterestRate(savingsDTO.getInterestRate() != null ?
-                    savingsDTO.getInterestRate() :
-                    new BigDecimal(0.0025));
-            savings.setMinimumBalance(savingsDTO.getMinimumBalance() != null ?
-                    new Money(savingsDTO.getMinimumBalance()) :
-                    new Money(new BigDecimal(random.nextInt(900) + 101)));
-            savings.setLastFee(LocalDateTime.now());
-        } else {
-            throw new IllegalArgumentException("The account holder does not exist");
+        if(accountHolder.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is null");
         }
+        savings.setBalance(new Money(savingsDTO.getBalance()));
+        savings.setPrimaryOwner(accountHolder.get());
+        savings.setStatus(savingsDTO.getStatus());
+        savings.setSecretKey(savingsDTO.getSecretKey());
+        savings.setCreationTime(LocalDateTime.now());
+        savings.setInterestRate(savingsDTO.getInterestRate() != null ?
+                savingsDTO.getInterestRate() :
+                new BigDecimal("0.0025"));
+        savings.setMinimumBalance(savingsDTO.getMinimumBalance() != null ?
+                new Money(savingsDTO.getMinimumBalance()) :
+                new Money(new BigDecimal(random.nextInt(900) + 101)));
+        savings.setLastFee(LocalDateTime.now());
 
         if (accountHolder1 != null) {savings.setSecondaryOwner(accountHolder1);}
 
@@ -78,48 +76,34 @@ public class SavingsService implements ISavingsService {
         Optional<Savings> savings = savingsRepository.findById(id);
         Integer year = Time.years(savings.get().getLastFee().toLocalDate());
 
-        if (savings.isPresent() && year >= 1){
+        if (year >= 1){
             BigDecimal newInterestRate = savings.get().getBalance().getAmount()
                     .multiply(savings.get().getInterestRate())
                     .multiply(new BigDecimal(Time.years(savings.get().getLastFee().toLocalDate())));
             savings.get().getBalance().increaseAmount(newInterestRate);
             savings.get().setLastFee(LocalDateTime.now());
         }
-    }
-
-    public BalanceDTO checkBalance(Long id, String username){
-
-        User user = userRepository.findByUsername(username).get();
-        AccountHolder accountHolder = accountHolderRepository.findByUsername(user.getUsername()).get();
-        Savings savings = savingsRepository.findById(id).get();
-        BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
-
-        if(accountHolder.showAccounts().contains(savings)){
-            addInterestRate(id);
-            return balance;
-        } else if (savings.isBelowMinimumBalance()) {
-            savings.getBalance().decreaseAmount(savings.getPenalty());
-            return balance;
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User does not have saving accounts");
-        }
+        savingsRepository.save(savings.get());
     }
 
     public BalanceDTO checkBalanceAdmin(Long id, String username){
 
-        Admin admin = adminRepository.findByUsername(username);
-        Savings savings = savingsRepository.findById(id).get();
-        BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
+    Admin admin = adminRepository.findByUsername(username);
+    Savings savings = savingsRepository.findById(id).get();
+    BalanceDTO balance = new BalanceDTO(savings.getId(), savings.getBalance().getAmount(), savings.getBalance().getCurrency());
+    if(admin == null){
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is null");
+    }
+    if(admin.getUsername().equals(username)){
+        addInterestRate(id);
+        return balance;
+    } else if (savings.isBelowMinimumBalance()) {
+        savings.getBalance().decreaseAmount(savings.getPenalty());
+        return balance;
+    } else {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User id does not match Admin permissions");
+    }
 
-        if(admin.getUsername().equals(username) && admin!=null){
-            addInterestRate(id);
-            return balance;
-        } else if (savings.isBelowMinimumBalance()) {
-            savings.getBalance().decreaseAmount(savings.getPenalty());
-            return balance;
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User id does not match Admin permissions");
-        }
     }
 
     public Savings transformToSavingsFromDTO(SavingsDTO savingsDTO){
@@ -137,7 +121,7 @@ public class SavingsService implements ISavingsService {
             savings.setSecretKey(savingsDTO.getSecretKey());
             savings.setInterestRate(savingsDTO.getInterestRate() != null ?
                     savingsDTO.getInterestRate() :
-                    new BigDecimal(0.0025));
+                    new BigDecimal("0.0025"));
             savings.setMinimumBalance(savingsDTO.getMinimumBalance() != null ?
                     new Money(savingsDTO.getMinimumBalance()) :
                     new Money(new BigDecimal(random.nextInt(900) + 101)));

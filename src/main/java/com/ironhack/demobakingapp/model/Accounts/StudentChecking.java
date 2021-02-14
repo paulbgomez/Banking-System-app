@@ -15,8 +15,6 @@ public class StudentChecking extends Account{
 
     /** PARAMS **/
 
-    @Enumerated(EnumType.STRING)
-    protected Status status;
     protected String secretKey;
 
     /** CONSTRUCTORS **/
@@ -24,26 +22,12 @@ public class StudentChecking extends Account{
     public StudentChecking() {
     }
 
-    public StudentChecking(Status status, String secretKey) {
-        this.status = status;
-        this.secretKey = secretKey;
-    }
-
-    public StudentChecking(Money balance, AccountHolder primaryOwner, Status status, String secretKey) {
+    public StudentChecking(Money balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);
-        this.status = status;
-        this.secretKey = secretKey;
+        setSecretKey(secretKey);
     }
 
     /** GETTERS & SETTERS **/
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 
     public String getSecretKey() {
         return secretKey;

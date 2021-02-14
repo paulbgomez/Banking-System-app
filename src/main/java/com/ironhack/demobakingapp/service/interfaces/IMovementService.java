@@ -4,5 +4,5 @@ import com.ironhack.demobakingapp.model.Movement;
 
 public interface IMovementService {
 
-    void penaltyFee(Movement movement);
+    Movement save(Movement movement);
 }

@@ -12,7 +12,6 @@ public interface ISavingsService {
     Savings save(Savings savings);
     List<Savings> findAll();
     Savings findById(Long id);
-    BalanceDTO checkBalance(Long id, String username);
     Savings transformToSavingsFromDTO(SavingsDTO savingsDTO);
     void addInterestRate(Long id);
     BalanceDTO checkBalanceAdmin(Long id, String username);

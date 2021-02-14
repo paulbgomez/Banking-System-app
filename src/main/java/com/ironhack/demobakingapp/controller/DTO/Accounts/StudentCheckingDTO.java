@@ -25,13 +25,12 @@ public class StudentCheckingDTO extends AccountDTO{
 
     /** CONSTRUCTOR **/
 
-    public StudentCheckingDTO(LocalDateTime creationTime, @NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status) {
+    public StudentCheckingDTO(LocalDateTime creationTime, @NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey) {
         super(creationTime);
         setPrimaryOwnerId(primaryOwnerId);
         setSecondaryOwnerId(secondaryOwnerId);
         setBalance(balance);
         setSecretKey(secretKey);
-        setStatus(status);
     }
 
     /** GETTERS & SETTERS **/
@@ -48,7 +47,6 @@ public class StudentCheckingDTO extends AccountDTO{
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.secretKey = passwordEncoder.encode(secretKey);
     }
-    public Status getStatus() {return status;}
-    public void setStatus(Status status) {this.status = status;}
+
 
 }

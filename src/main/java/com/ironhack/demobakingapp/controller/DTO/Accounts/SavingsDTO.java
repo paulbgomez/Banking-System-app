@@ -21,8 +21,6 @@ public class SavingsDTO extends AccountDTO{
     private BigDecimal balance;
     @NotNull(message = "Secretkey cannot be null")
     private String secretKey;
-    @NotNull(message = "Status cannot be null")
-    private Status status;
     @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000")
     @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100")
     private BigDecimal minimumBalance;
@@ -32,13 +30,12 @@ public class SavingsDTO extends AccountDTO{
 
     /** CONSTRUCTORS **/
 
-    public SavingsDTO(LocalDateTime creationTime, @NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status, @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000") @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100") BigDecimal minimumBalance, @DecimalMax(value = "0.5", message = "The interest rate has to be less than 0.5") @DecimalMin(value = "0", message = "The interest rate has to be more than 0") BigDecimal interestRate) {
+    public SavingsDTO(LocalDateTime creationTime, @NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @DecimalMax(value = "1000.00", message = "The minimum balance has to be less than 1000") @DecimalMin(value = "100.00", message = "The minimum balance has to be more than 100") BigDecimal minimumBalance, @DecimalMax(value = "0.5", message = "The interest rate has to be less than 0.5") @DecimalMin(value = "0", message = "The interest rate has to be more than 0") BigDecimal interestRate) {
         super(creationTime);
         setPrimaryOwnerId(primaryOwnerId);
         setSecondaryOwnerId(secondaryOwnerId);
         setBalance(balance);
         setSecretKey(secretKey);
-        setStatus(status);
         setMinimumBalance(minimumBalance);
         setInterestRate(interestRate);
     }
@@ -56,8 +53,6 @@ public class SavingsDTO extends AccountDTO{
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.secretKey = passwordEncoder.encode(secretKey);
     }
-    public Status getStatus() {return status;}
-    public void setStatus(Status status) {this.status = status;}
     public BigDecimal getMinimumBalance() {return minimumBalance;}
     public void setMinimumBalance(BigDecimal minimumBalance) {this.minimumBalance = minimumBalance;}
     public BigDecimal getInterestRate() {return interestRate;}

@@ -11,15 +11,16 @@ public class ThirdPartyDTO{
     /** PARAMS **/
 
     @NotNull(message = "Name cannot be null")
-    @NotEmpty
     private String name;
     @NotNull(message = "Hashkey cannot be null")
-    @NotEmpty
     private String hashKey;
 
     /** CONSTRUCTOR **/
 
-    public ThirdPartyDTO(@NotNull @NotEmpty String name, @NotNull @NotEmpty String hashKey) {
+    public ThirdPartyDTO() {
+    }
+
+    public ThirdPartyDTO(@NotNull String name, @NotNull String hashKey) {
         setName(name);
         setHashKey(hashKey);
     }

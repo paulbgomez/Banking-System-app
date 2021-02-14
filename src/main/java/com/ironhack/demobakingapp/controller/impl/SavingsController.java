@@ -2,6 +2,7 @@ package com.ironhack.demobakingapp.controller.impl;
 
 import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.interfaces.ISavingsController;
+import com.ironhack.demobakingapp.service.interfaces.Accounts.IAccountService;
 import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import java.security.Principal;
 public class SavingsController implements ISavingsController {
 
     @Autowired
-    private ISavingsService savingsService;
+    private IAccountService accountService;
 
     /** GET REQUEST **/
 
@@ -20,7 +21,7 @@ public class SavingsController implements ISavingsController {
     @GetMapping("/savings/check-balance/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BalanceDTO checkBalance(@PathVariable Long id, Principal principal){
-        return savingsService.checkBalance(id, principal.getName());
+        return accountService.checkBalance(id, principal.getName());
     }
 
 }

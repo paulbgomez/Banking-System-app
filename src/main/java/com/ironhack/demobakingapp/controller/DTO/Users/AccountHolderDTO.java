@@ -18,15 +18,31 @@ public class AccountHolderDTO extends UserDTO {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
-    private Address mailingAddress;
-    private Address primaryAddress;
+
+    @NotNull(message = "Primary Address can't be null.")
+    private AddressDTO primaryAddressDTO;
+
+    private AddressDTO mailingAddressDTO;
 
     /** CONSTRUCTORS **/
-    public AccountHolderDTO(@NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull String password, LocalDate birthDate, @NotEmpty @NotNull Address mailingAddress, @NotEmpty @NotNull Address primaryAddress) {
+    public AccountHolderDTO() {
+    }
+
+    public AccountHolderDTO( @NotNull String name,  @NotNull String username,  @NotNull String password) {
+        super(name, username, password);
+    }
+
+    public AccountHolderDTO( @NotNull String name,  @NotNull String username,  @NotNull String password, LocalDate birthDate, @NotNull(message = "Primary Address can't be null.") AddressDTO primaryAddressDTO) {
         super(name, username, password);
         setBirthDate(birthDate);
-        setMailingAddress(mailingAddress);
-        setPrimaryAddress(primaryAddress);
+        setPrimaryAddressDTO(primaryAddressDTO);
+    }
+
+    public AccountHolderDTO( @NotNull String name,  @NotNull String username,  @NotNull String password, LocalDate birthDate, @NotNull(message = "Primary Address can't be null.") AddressDTO primaryAddressDTO, AddressDTO mailingAddressDTO) {
+        super(name, username, password);
+        setBirthDate(birthDate);
+        setPrimaryAddressDTO(primaryAddressDTO);
+        setMailingAddressDTO(mailingAddressDTO);
     }
 
     /** GETTERS & SETTERS **/
@@ -38,21 +54,19 @@ public class AccountHolderDTO extends UserDTO {
         this.birthDate = birthDate;
     }
 
-    public Address getMailingAddress() {
-        return mailingAddress;
+    public AddressDTO getPrimaryAddressDTO() {
+        return primaryAddressDTO;
     }
 
-    public void setMailingAddress(Address mailingAddress) {
-        this.mailingAddress = mailingAddress;
+    public void setPrimaryAddressDTO(AddressDTO primaryAddressDTO) {
+        this.primaryAddressDTO = primaryAddressDTO;
     }
 
-    public Address getPrimaryAddress() {
-        return primaryAddress;
+    public AddressDTO getMailingAddressDTO() {
+        return mailingAddressDTO;
     }
 
-    public void setPrimaryAddress(Address primaryAddress) {
-        this.primaryAddress = primaryAddress;
+    public void setMailingAddressDTO(AddressDTO mailingAddressDTO) {
+        this.mailingAddressDTO = mailingAddressDTO;
     }
-
-
 }

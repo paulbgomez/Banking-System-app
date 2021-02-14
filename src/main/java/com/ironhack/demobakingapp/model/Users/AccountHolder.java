@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ironhack.demobakingapp.classes.Address;
+import com.ironhack.demobakingapp.controller.DTO.Users.AddressDTO;
 import com.ironhack.demobakingapp.model.Accounts.Account;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,7 +35,7 @@ public class AccountHolder extends User {
             @AttributeOverride(name = "country", column = @Column(name = "mailing_address_country")),
             @AttributeOverride(name = "postalCode", column = @Column(name = "mailing_address_postal_code"))
     })
-    private Address mailingAddress;
+    private AddressDTO mailingAddress;
     @Embedded
     @AttributeOverrides(value ={
             @AttributeOverride(name = "city", column = @Column(name = "primary_address_city")),
@@ -41,7 +44,7 @@ public class AccountHolder extends User {
             @AttributeOverride(name = "country", column = @Column(name = "primary_address_country")),
             @AttributeOverride(name = "postalCode", column = @Column(name = "primary_address_postal_code"))
     })
-    private Address primaryAddress;
+    private AddressDTO primaryAddress;
     @OneToMany(mappedBy = "primaryOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Account> primaryAccounts;
@@ -54,13 +57,31 @@ public class AccountHolder extends User {
     public AccountHolder() {
     }
 
-    public AccountHolder(String name, String password, String userName, LocalDate birthDate, Address mailingAddress, Address primaryAddress) {
+    public AccountHolder(String name, String password, String userName, LocalDate birthDate, AddressDTO mailingAddress, AddressDTO primaryAddress) {
         super(name, password, userName);
-        this.birthDate = birthDate;
-        this.mailingAddress = mailingAddress;
-        this.primaryAddress = primaryAddress;
+        setBirthDate(birthDate);
+        setMailingAddress(mailingAddress);
+        setPrimaryAddress(primaryAddress);
         this.primaryAccounts = new HashSet<>();
         this.secondaryAccounts = new HashSet<>();
+    }
+
+    /** METHODS **/
+    public List<Account> showAccounts(){
+        List<Account> result = new ArrayList<>();
+        this.primaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toList());
+        this.secondaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toList());
+        return result;
+    }
+
+    public Boolean isOwner(Long accountID){
+        List<Account> allAccounts = this.showAccounts();
+        for (Account account: allAccounts){
+            if (account.getId().equals(accountID)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /** GETTERS & SETTERS **/
@@ -73,19 +94,19 @@ public class AccountHolder extends User {
         this.birthDate = birthDate;
     }
 
-    public Address getMailingAddress() {
+    public AddressDTO getMailingAddress() {
         return mailingAddress;
     }
 
-    public void setMailingAddress(Address mailingAddress) {
+    public void setMailingAddress(AddressDTO mailingAddress) {
         this.mailingAddress = mailingAddress;
     }
 
-    public Address getPrimaryAddress() {
+    public AddressDTO getPrimaryAddress() {
         return primaryAddress;
     }
 
-    public void setPrimaryAddress(Address primaryAddress) {
+    public void setPrimaryAddress(AddressDTO primaryAddress) {
         this.primaryAddress = primaryAddress;
     }
 
@@ -106,12 +127,6 @@ public class AccountHolder extends User {
     }
 
 
-    public Set<Account> showAccounts(){
-        Set<Account> result = new HashSet<>();
-        this.primaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toSet());
-        this.secondaryAccounts.stream().map(account->result.add(account)).collect(Collectors.toSet());
-        return result;
-    }
 
     @Override
     public String toString() {

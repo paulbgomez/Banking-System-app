@@ -15,5 +15,8 @@ public interface IAccountService {
     void decrementBalance(Long id, BigDecimal amount, String username);
     List<BalanceDTO> checkBalanceAll(Long id, String username);
     Movement transferToThirdParty(String name, String hashKey, MovementDTO movementDTO, String username);
+    Movement transferFromThirdParty(String name, String hashKey, MovementDTO movementDTO);
+    BalanceDTO checkBalance(Long id, String username);
+
 
 }

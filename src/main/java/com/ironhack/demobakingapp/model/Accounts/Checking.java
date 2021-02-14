@@ -41,8 +41,8 @@ public class Checking extends StudentChecking{
     public Checking() {
     }
 
-    public Checking(Money balance, AccountHolder primaryOwner, Status status, String secretKey) {
-        super(balance, primaryOwner, status, secretKey);
+    public Checking(Money balance, AccountHolder primaryOwner, String secretKey) {
+        super(balance, primaryOwner, secretKey);
         setBelowMinimumBalance(false);
         setLastFee(LocalDateTime.now());
     }

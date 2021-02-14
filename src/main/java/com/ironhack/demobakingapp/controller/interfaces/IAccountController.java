@@ -5,8 +5,14 @@ import com.ironhack.demobakingapp.model.Movement;
 import java.security.Principal;
 
 public interface IAccountController {
-     Movement transfer(MovementDTO movementDTO, Principal principal);
 
-     Movement transfer( String name, String hashKey,MovementDTO movementDTO, Principal principal);
+    /** POST REQUEST **/
 
-        }
+    /** Transfer between Account Holders **/
+    Movement transfer(MovementDTO movementDTO, Principal principal);
+
+    /** Transfer with Third Party **/
+    Movement transfer( String name, String hashKey,MovementDTO movementDTO, Principal principal);
+    Movement transfer( String name, String hashKey,MovementDTO movementDTO);
+
+}

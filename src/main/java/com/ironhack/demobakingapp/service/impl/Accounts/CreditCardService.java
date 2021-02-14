@@ -72,9 +72,7 @@ public class CreditCardService implements ICreditCardService {
 
     public void addInterestRate(Long id){
         Optional<CreditCard> creditCard = creditCardRepository.findById(id);
-        System.out.println(creditCard.get().getLastInterestUpdate());
         Integer month = Time.months(creditCard.get().getLastInterestUpdate());
-        System.out.println(month);
 
         if (creditCard.isPresent() && month >= 1){
                 BigDecimal calculatedInterest = creditCard.get().getBalance().getAmount()
@@ -83,6 +81,7 @@ public class CreditCardService implements ICreditCardService {
                 creditCard.get().getBalance().increaseAmount(calculatedInterest);
                 creditCard.get().setLastInterestUpdate(creditCard.get().getLastInterestUpdate().plusMonths(Time.months(creditCard.get().getLastInterestUpdate())));
         }
+        creditCardRepository.save(creditCard.get());
     }
 
     public CreditCard transformToCreditCardFromDTO(CreditCardDTO creditCardDTO){
@@ -101,7 +100,7 @@ public class CreditCardService implements ICreditCardService {
                     new BigDecimal(0.02));
             creditCard.setCreditLimit(creditCardDTO.getCreditLimit() != null ?
                     new Money(creditCardDTO.getCreditLimit()) :
-                    new Money(new BigDecimal(random.nextInt(900) + 101)));
+                    new Money(new BigDecimal(random.nextInt(90000) + 101)));
 
             creditCard.setLastInterestUpdate(LocalDate.now());
         } else {

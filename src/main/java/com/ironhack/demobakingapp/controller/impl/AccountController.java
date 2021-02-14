@@ -27,11 +27,18 @@ public class AccountController implements IAccountController {
         return accountService.transfer(movementDTO, principal.getName());
     }
 
-    /** New Transference With Third Party **/
-    @PostMapping("/new-transference/{name}/{hashKey}")
+    /** New Transference To Third Party **/
+    @PostMapping("/new-transference/to/{name}/{hashKey}")
     @ResponseStatus(HttpStatus.CREATED)
     public Movement transfer(@PathVariable String name,@PathVariable String hashKey, @RequestBody @Valid MovementDTO movementDTO, Principal principal){
         return accountService.transferToThirdParty(name, hashKey, movementDTO, principal.getName());
+    }
+
+    /** New Transference From Third Party **/
+    @PostMapping("/new-transference/from/{name}/{hashKey}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Movement transfer(@PathVariable String name,@PathVariable String hashKey, @RequestBody @Valid MovementDTO movementDTO){
+        return accountService.transferFromThirdParty(name, hashKey, movementDTO);
     }
 
 

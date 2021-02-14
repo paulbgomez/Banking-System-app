@@ -10,24 +10,24 @@ public class UserDTO {
 
     /** PARAMS **/
 
-    @NotEmpty(message = "Name cannot be null")
     @NotNull
     private String name;
 
-    @NotEmpty(message = "Username cannot be null")
     @NotNull
     private String username;
 
 
-    @NotEmpty(message = "Password cannot be null")
     @NotNull
     private String password;
 
     /** CONSTRUCTOR **/
 
-    public UserDTO(@NotEmpty @NotNull String name, @NotEmpty @NotNull String username, @NotEmpty @NotNull String password) {
-        this.name = name;
-        this.username = username;
+    public UserDTO() {
+    }
+
+    public UserDTO( @NotNull String name,  @NotNull String username,  @NotNull String password) {
+        setName(name);
+        setUsername(username);
         setPassword(password);
     }
 

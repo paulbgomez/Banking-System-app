@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.ironhack.demobakingapp.enums.Status;
+
 import java.time.LocalDateTime;
 
 public class AccountDTO {
@@ -14,6 +16,7 @@ public class AccountDTO {
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         protected LocalDateTime creationTime;
         protected boolean isFrozen;
+        protected Status status;
 
 
         /** CONSTRUCTORS **/
@@ -21,6 +24,7 @@ public class AccountDTO {
         public AccountDTO(LocalDateTime creationTime) {
             setFrozen(false);
             setCreationTime(LocalDateTime.now());
+            setStatus(Status.ACTIVE);
         }
 
         /** GETTERS & SETTERS **/
@@ -39,5 +43,19 @@ public class AccountDTO {
 
     public void setFrozen(boolean frozen) {
         isFrozen = frozen;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void blockAccount(){
+        if(isFrozen){
+            this.setStatus(Status.FROZEN);
+        }
     }
 }

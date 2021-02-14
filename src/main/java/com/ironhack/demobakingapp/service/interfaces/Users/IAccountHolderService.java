@@ -8,5 +8,6 @@ public interface IAccountHolderService {
 
         AccountHolder add(AccountHolderDTO accountHolderDTO);
         AccountHolder findById(Long id);
+        AccountHolder findByUsername(String username);
 
 }

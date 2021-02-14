@@ -78,7 +78,7 @@ public class AdminController implements IAdminController {
     @ResponseStatus(HttpStatus.OK)
     public List<Savings> findAllSavingAccounts(){ return savingsService.findAll();}
 
-    /** Show One Savings Account Balance For Admin **/
+    /** Show One Savings Account Balance For Admin Logger **/
     @GetMapping("/admin/savings/check-balance/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BalanceDTO checkBalanceAdmin(@PathVariable Long id, Principal principal){

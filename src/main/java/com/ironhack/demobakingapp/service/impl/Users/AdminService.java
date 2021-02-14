@@ -21,6 +21,7 @@ import com.ironhack.demobakingapp.service.impl.Accounts.AccountService;
 import com.ironhack.demobakingapp.service.impl.Accounts.CreditCardService;
 import com.ironhack.demobakingapp.service.impl.Accounts.StudentCheckingService;
 import com.ironhack.demobakingapp.service.interfaces.Accounts.ISavingsService;
+import com.ironhack.demobakingapp.service.interfaces.Users.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class AdminService {
+public class AdminService implements IAdminService {
 
     @Autowired
     private AdminRepository adminRepository;

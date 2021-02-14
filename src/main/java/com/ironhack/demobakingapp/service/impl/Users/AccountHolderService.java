@@ -27,8 +27,8 @@ public class AccountHolderService implements IAccountHolderService {
                 accountHolderDTO.getPassword(),
                 accountHolderDTO.getUsername(),
                 accountHolderDTO.getBirthDate(),
-                accountHolderDTO.getMailingAddress(),
-                accountHolderDTO.getPrimaryAddress()
+                accountHolderDTO.getMailingAddressDTO(),
+                accountHolderDTO.getMailingAddressDTO()
                 );
         Role role = new Role(UserRole.ACCOUNT_HOLDER, accountHolder);
         Set<Role> roles = Stream.of(role).collect(Collectors.toCollection(HashSet::new));
@@ -42,8 +42,8 @@ public class AccountHolderService implements IAccountHolderService {
         return accountHolderRepository.getOne(id);
     }
 
-    public AccountHolder findByName(String name){
-        return accountHolderRepository.findByName(name).get();
+    public AccountHolder findByUsername(String username){
+        return accountHolderRepository.findByUsername(username).get();
     }
 
 

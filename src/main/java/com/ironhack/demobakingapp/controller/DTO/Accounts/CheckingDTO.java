@@ -24,21 +24,18 @@ public class CheckingDTO extends AccountDTO{
     private BigDecimal balance;
     @NotNull(message = "Secretkey cannot be null")
     private String secretKey;
-    @NotNull(message = "Status cannot be null")
-    private Status status;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastFee;
 
     /** CONSTRUCTORS **/
 
-    public CheckingDTO(LocalDateTime creationTime, @NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey, @NotNull Status status) {
+    public CheckingDTO(LocalDateTime creationTime, @NotNull Long primaryOwnerId, Long secondaryOwnerId, @NotNull BigDecimal balance, @NotNull String secretKey) {
         super(creationTime);
         setPrimaryOwnerId(primaryOwnerId);
         setSecondaryOwnerId(secondaryOwnerId);
         setBalance(balance);
         setSecretKey(secretKey);
-        setStatus(status);
         setLastFee(LocalDateTime.now());
     }
 
@@ -85,11 +82,4 @@ public class CheckingDTO extends AccountDTO{
         this.secretKey = passwordEncoder.encode(secretKey);
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

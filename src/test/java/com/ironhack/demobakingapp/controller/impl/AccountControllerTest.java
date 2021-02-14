@@ -8,11 +8,13 @@ import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
+import com.ironhack.demobakingapp.controller.DTO.Users.AddressDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.ThirdPartyDTO;
 import com.ironhack.demobakingapp.enums.Status;
 import com.ironhack.demobakingapp.enums.UserRole;
 import com.ironhack.demobakingapp.model.Accounts.Account;
 import com.ironhack.demobakingapp.model.Accounts.Savings;
+import com.ironhack.demobakingapp.model.Movement;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 import com.ironhack.demobakingapp.model.Users.Admin;
 import com.ironhack.demobakingapp.model.Users.Role;
@@ -108,20 +110,35 @@ class AccountControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private List<Account> accounts;
+    public Admin admin;
+    public Admin admin2;
+    public Admin admin3;
+    public Admin admin4;
 
     @BeforeEach
     void setUp() {
-        Address address = new Address("Philadelphia", "Fake Street 123", "Pennsylvania", "USA", "ZP886F");
+        AddressDTO address = new AddressDTO("Philadelphia", "Fake Street 123", "Pennsylvania", "USA", "ZP886F");
+
+        admin = new Admin("Morgan Freeman", "2020", "god");
+        admin2 = new Admin("Michael Jordan", "2020", "b_god");
+        admin3 = new Admin("Mike Tyson", "2020", "d_god");
+        admin4 = new Admin("Michael Jackson", "2020", "s_god");
+
+        adminRepository.saveAll(List.of(
+                admin,
+                admin2,
+                admin3,
+                admin4
+        ));
 
         /** Account Holders **/
-        List<AccountHolderDTO> accountHolderDTOList = new ArrayList<>();
 
-        accountHolderDTOList.addAll(List.of(
-                new AccountHolderDTO("lola", "lola_93", "123456", LocalDate.of(1993, 12, 07), address
+        List<AccountHolderDTO> accountHolderDTOList = new ArrayList<>(List.of(
+                new AccountHolderDTO("lola", "lola_93", "123456", LocalDate.of(1993, 12, 7), address
                         , address),
-                new AccountHolderDTO("paul", "paul_00", "65Jkp_0", LocalDate.of(2000, 12, 07), address
+                new AccountHolderDTO("paul", "paul_00", "65Jkp_0", LocalDate.of(2000, 12, 7), address
                         , address),
-                new AccountHolderDTO("kareem", "kareem_93", ".!.!.!", LocalDate.of(1993, 12, 07), address
+                new AccountHolderDTO("kareem", "kareem_93", ".!.!.!", LocalDate.of(1993, 12, 7), address
                         , address)
         ));
 
@@ -130,23 +147,22 @@ class AccountControllerTest {
         AccountHolder kareem = accountHolderService.add(accountHolderDTOList.get(2));
 
         /** Savings **/
-        List<SavingsDTO> savingsDTOList = new ArrayList<>();
 
-        savingsDTOList.addAll(List.of(
-                new SavingsDTO(LocalDateTime.now(), lola.getId(), paul.getId(), new BigDecimal(5000.50), "123456", Status.ACTIVE, null, null),
-                new SavingsDTO(LocalDateTime.now(), lola.getId(), null, new BigDecimal(5000.50), "123456", Status.ACTIVE, null, null),
-                new SavingsDTO(LocalDateTime.now(), paul.getId(), lola.getId(), new BigDecimal(5000.50), "123456", Status.ACTIVE, null, null),
-                new SavingsDTO(LocalDateTime.now(), paul.getId(), null, new BigDecimal(5000.50), "123456", Status.ACTIVE, null, null),
-                new SavingsDTO(LocalDateTime.now(), kareem.getId(), null, new BigDecimal(5000.50), "123456", Status.ACTIVE, null, null)
+        List<SavingsDTO> savingsDTOList = new ArrayList<>(List.of(
+                new SavingsDTO(LocalDateTime.now(), lola.getId(), paul.getId(), new BigDecimal("5000.50"), "123456", null, null),
+                new SavingsDTO(LocalDateTime.now(), lola.getId(), null, new BigDecimal("5000.50"), "123456", null, null),
+                new SavingsDTO(LocalDateTime.now(), paul.getId(), lola.getId(), new BigDecimal("5000.50"), "123456", null, null),
+                new SavingsDTO(LocalDateTime.now(), paul.getId(), null, new BigDecimal("5000.50"), "123456", null, null),
+                new SavingsDTO(LocalDateTime.now(), kareem.getId(), null, new BigDecimal("5000.50"), "123456", null, null),
+                new SavingsDTO(LocalDateTime.now(), kareem.getId(), null, new BigDecimal("5000.50"), "frozen", null, null)
         ));
 
         /** Credit Cards **/
-        List<CreditCardDTO> creditCardDTOList = new ArrayList<>();
 
-        creditCardDTOList.addAll(List.of(
-                new CreditCardDTO(LocalDateTime.now(), lola.getId(), null, new BigDecimal(5000.50),  null, new BigDecimal(0.3)),
-                new CreditCardDTO(LocalDateTime.now(), kareem.getId(), null, new BigDecimal(5000.50), null, null)
-                ));
+        List<CreditCardDTO> creditCardDTOList = new ArrayList<>(List.of(
+                new CreditCardDTO(LocalDateTime.now(), lola.getId(), null, new BigDecimal("5000.50"), null, new BigDecimal(0.3)),
+                new CreditCardDTO(LocalDateTime.now(), kareem.getId(), null, new BigDecimal("15000.50"), null, null)
+        ));
 
         /** Accounts List **/
         accounts = new ArrayList<>();
@@ -159,6 +175,11 @@ class AccountControllerTest {
                 creditCardService.save(creditCardService.transformToCreditCardFromDTO(creditCardDTOList.get(0))),
                 creditCardService.save(creditCardService.transformToCreditCardFromDTO(creditCardDTOList.get(1)))
         ));
+
+        /** Transferences **/
+
+        movementRepository.save(new Movement(accounts.get(3), accounts.get(6), new Money(new BigDecimal("10"))));
+        movementRepository.save(new Movement(accounts.get(3), accounts.get(4), new Money(new BigDecimal("10"))));
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
     }
@@ -180,7 +201,7 @@ class AccountControllerTest {
         Long savingsId = accounts.get(0).getId();
         Long savingsId2 = accounts.get(4).getId();
 
-        MovementDTO movementDTO = new MovementDTO(savingsId, "Kareem", savingsId2, new BigDecimal(1000.50));
+        MovementDTO movementDTO = new MovementDTO(savingsId, "Kareem", savingsId2, new BigDecimal("1000.50"));
 
         String body = objectMapper.writeValueAsString(movementDTO);
 
@@ -191,7 +212,7 @@ class AccountControllerTest {
                         .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
                 .andExpect(status().isCreated()).andReturn();
 
-        assertTrue((new BigDecimal(4000.00).compareTo(accountRepository.findById(savingsId).get().getBalance().getAmount())) == 0);
+        assertTrue((new BigDecimal("4000.00").compareTo(accountRepository.findById(savingsId).get().getBalance().getAmount())) == 0);
     }
 
     @Test
@@ -259,7 +280,79 @@ class AccountControllerTest {
     }
 
     @Test
-    void newTransferThirdPartySend_LocalMovementTwoDifferentAccounts_Ok() throws Exception {
+    void newTransferToFrozen_LocalMovementTwoDifferentAccounts_Error() throws Exception {
+
+        Long savingsId = accounts.get(0).getId();
+        Long savingsId2 = accounts.get(5).getId();
+        accounts.get(5).setFrozen(true);
+        accounts.get(5).blockAccount();
+        accountRepository.save(accounts.get(5));
+
+        MovementDTO movementDTO = new MovementDTO(savingsId, "Kareem", savingsId2, new BigDecimal(10.50));
+
+        String body = objectMapper.writeValueAsString(movementDTO);
+
+        MvcResult result = mockMvc.perform(
+                post("/new-transference/")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
+                .andExpect(status().isNotAcceptable()).andReturn();
+
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            accountService.transfer(movementDTO, accounts.get(0).getPrimaryOwner().getUsername());
+        });
+    }
+
+    @Test
+    void newTransferFromFrozen_LocalMovementTwoDifferentAccounts_Error() throws Exception {
+
+        Long savingsId = accounts.get(0).getId();
+        accounts.get(0).setFrozen(true);
+        accounts.get(0).blockAccount();
+        accountRepository.save(accounts.get(0));
+        Long savingsId2 = accounts.get(5).getId();
+
+        MovementDTO movementDTO = new MovementDTO(savingsId, "Kareem", savingsId2, new BigDecimal(10.50));
+
+        String body = objectMapper.writeValueAsString(movementDTO);
+
+        MvcResult result = mockMvc.perform(
+                post("/new-transference/")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
+                .andExpect(status().isNotAcceptable()).andReturn();
+
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            accountService.transfer(movementDTO, accounts.get(0).getPrimaryOwner().getUsername());
+        });
+    }
+
+    @Test
+    void newTransferFraudAccount_LocalMovementTwoDifferentAccounts_Error() throws Exception {
+
+        Long savingsId = accounts.get(3).getId();
+        Long savingsId2 = accounts.get(5).getId();
+
+        MovementDTO movementDTO = new MovementDTO(savingsId, "Kareem", savingsId2, new BigDecimal(10.50));
+
+        String body = objectMapper.writeValueAsString(movementDTO);
+
+        MvcResult result = mockMvc.perform(
+                post("/new-transference/")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
+                .andExpect(status().isUnauthorized()).andReturn();
+
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            accountService.transfer(movementDTO, accounts.get(0).getPrimaryOwner().getUsername());
+        });
+    }
+
+    @Test
+    void newTransferToThirdParty_LocalMovementTwoDifferentAccounts_Ok() throws Exception {
 
         ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO("random", "123456");
 
@@ -269,43 +362,150 @@ class AccountControllerTest {
                         thirdPartyDTO.getHashKey()
                 ));
 
-        Long savingsId = accounts.get(0).getId();
+        Account account = new Account(new Money(new BigDecimal(1000.50)), accountHolderRepository.findByUsername("lola_93").get());
+        accountRepository.save(account);
 
-        MovementDTO movementDTO = new MovementDTO(savingsId, "random", "transfer to third party", new BigDecimal(1000.50));
-
+        MovementDTO movementDTO = new MovementDTO(accountRepository.findById(account.getId()).get().getId(), "random", "transfer to third party", new BigDecimal(1000));
         String body = objectMapper.writeValueAsString(movementDTO);
 
-        System.out.println(thirdPartyRepository.findByName(movementDTO.getReceiverName()));
-        System.out.println(thirdPartyRepository.findByName(movementDTO.getReceiverName()).getHashKey());
-
         MvcResult result = mockMvc.perform(
-                post("/new-transference/" + random.getName() + "/"
-                        + random.getHashKey())
+                post("/new-transference/to/" + random.getName() + "/123456")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
                 .andExpect(status().isCreated()).andReturn();
 
-        assertTrue((new BigDecimal(4000.00).compareTo(accountRepository.findById(savingsId).get().getBalance().getAmount())) == 0);
+        assertTrue((new BigDecimal(0.50).compareTo(accountRepository.findById(account.getId()).get().getBalance().getAmount())) == 0);
     }
 
     @Test
-    void newTransferThirdPartyReceive_LocalMovementTwoDifferentAccounts_Ok() throws Exception {
+    void newTransferFromThirdParty_LocalMovementTwoDifferentAccounts_Ok() throws Exception {
 
-        Long savingsId = accounts.get(0).getId();
-        Long savingsId2 = accounts.get(4).getId();
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO("random", "123456");
 
-        MovementDTO movementDTO = new MovementDTO(savingsId, "Kareem", savingsId2, new BigDecimal(1000.50));
+        ThirdParty random = thirdPartyRepository.save(
+                new ThirdParty(
+                        thirdPartyDTO.getName(),
+                        thirdPartyDTO.getHashKey()
+                ));
 
+        Account account = new Account(new Money(new BigDecimal(1000)), accountHolderRepository.findByUsername("lola_93").get());
+        accountRepository.save(account);
+
+        MovementDTO movementDTO = new MovementDTO("random", "transfer to third party",accountRepository.findById(account.getId()).get().getId(), new BigDecimal(1000));
         String body = objectMapper.writeValueAsString(movementDTO);
 
         MvcResult result = mockMvc.perform(
-                post("/new-transference/")
+                post("/new-transference/from/" + random.getName() + "/123456")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
                 .andExpect(status().isCreated()).andReturn();
 
+        assertTrue((new BigDecimal(2000).compareTo(accountRepository.findById(account.getId()).get().getBalance().getAmount())) == 0);
+
+    }
+
+    @Test
+    void newTransferToThirdParty_LocalMovementNotOwner_Error() throws Exception {
+
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO("random", "123456");
+
+        ThirdParty random = thirdPartyRepository.save(
+                new ThirdParty(
+                        thirdPartyDTO.getName(),
+                        thirdPartyDTO.getHashKey()
+                ));
+
+        Account account = new Account(new Money(new BigDecimal(1000.50)), accountHolderRepository.findByUsername("lola_93").get());
+        accountRepository.save(account);
+
+        MovementDTO movementDTO = new MovementDTO(accountRepository.findById(account.getId()).get().getId(), "random", "transfer to third party", new BigDecimal(1000));
+        String body = objectMapper.writeValueAsString(movementDTO);
+
+        MvcResult result = mockMvc.perform(
+                post("/new-transference/to/" + random.getName() + "/123456")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("kareem_93").password(".!.!.!").roles("ACCOUNT_HOLDER")))
+                .andExpect(status().isUnauthorized()).andReturn();
+    }
+
+    @Test
+    void newTransferToThirdParty_LocalMovementNotEnoughFunds_Error() throws Exception {
+
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO("random", "123456");
+
+        ThirdParty random = thirdPartyRepository.save(
+                new ThirdParty(
+                        thirdPartyDTO.getName(),
+                        thirdPartyDTO.getHashKey()
+                ));
+
+        Account account = new Account(new Money(new BigDecimal(1000.50)), accountHolderRepository.findByUsername("lola_93").get());
+        accountRepository.save(account);
+
+        MovementDTO movementDTO = new MovementDTO(accountRepository.findById(account.getId()).get().getId(), "random", "transfer to third party", new BigDecimal(10000000));
+        String body = objectMapper.writeValueAsString(movementDTO);
+
+        MvcResult result = mockMvc.perform(
+                post("/new-transference/to/" + random.getName() + "/123456")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
+                .andExpect(status().isNotAcceptable()).andReturn();
+    }
+
+    @Test
+    void newTransferToThirdParty_LocalMovementFrozen_Error() throws Exception {
+
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO("random", "123456");
+
+        ThirdParty random = thirdPartyRepository.save(
+                new ThirdParty(
+                        thirdPartyDTO.getName(),
+                        thirdPartyDTO.getHashKey()
+                ));
+
+        Account account = new Account(new Money(new BigDecimal("1000.50")), accountHolderRepository.findByUsername("lola_93").get());
+        account.setFrozen(true);
+        accountRepository.save(account);
+
+        MovementDTO movementDTO = new MovementDTO(accountRepository.findById(account.getId()).get().getId(), "random", "transfer to third party", new BigDecimal(10));
+        String body = objectMapper.writeValueAsString(movementDTO);
+
+        MvcResult result = mockMvc.perform(
+                post("/new-transference/to/" + random.getName() + "/123456")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
+                .andExpect(status().isUnauthorized()).andReturn();
+    }
+
+    @Test
+    void newTransferToThirdParty_BadHashKey_Error() throws Exception {
+
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO("random", "123456");
+
+        ThirdParty random = thirdPartyRepository.save(
+                new ThirdParty(
+                        thirdPartyDTO.getName(),
+                        thirdPartyDTO.getHashKey()
+                ));
+
+        Account account = new Account(new Money(new BigDecimal("1000.50")), accountHolderRepository.findByUsername("lola_93").get());
+        account.setFrozen(true);
+        accountRepository.save(account);
+
+        MovementDTO movementDTO = new MovementDTO(accountRepository.findById(account.getId()).get().getId(), "random", "transfer to third party", new BigDecimal(10));
+        String body = objectMapper.writeValueAsString(movementDTO);
+
+        MvcResult result = mockMvc.perform(
+                post("/new-transference/to/" + random.getName() + "/123")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("lola_93").password("123456").roles("ACCOUNT_HOLDER")))
+                .andExpect(status().isUnauthorized()).andReturn();
     }
 
 }
