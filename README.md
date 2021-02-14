@@ -1,5 +1,5 @@
 ## Banking-System-app
-Banking-System
+Banking-System backend
 
 ## INSTALLATION
 
@@ -13,16 +13,16 @@ Banking-System
 2. You can add data to your database and check with Postman (or a similar API service) how the permission roles work (https://www.postman.com/downloads/).
 3. There are three users:
   
-  ##Admin
+  ## Admin
   Can do basically everything (checking all balances, add or remove money, create new users etc.).
   They can't do transferences, unless they have an account assigned.
   
-  ##Account-Holder
+  ## Account-Holder
   They can do transferences with other account holders or with third party users.
   They can also receive money from thir party users.
   They can check their own account balances.
   
-  ##Third-Party
+  ## Third-Party
   They can only send or receive money (they don't have an account ownership)
   
 
