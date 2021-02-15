@@ -1,7 +1,5 @@
 package com.ironhack.demobakingapp.controller.DTO.Transferences;
 
-import org.springframework.data.domain.Sort;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;

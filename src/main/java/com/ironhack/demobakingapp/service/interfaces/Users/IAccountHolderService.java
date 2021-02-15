@@ -1,6 +1,5 @@
 package com.ironhack.demobakingapp.service.interfaces.Users;
 
-
 import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
 

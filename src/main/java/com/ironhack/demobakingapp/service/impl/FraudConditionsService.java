@@ -1,22 +1,13 @@
 package com.ironhack.demobakingapp.service.impl;
 
 import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
-
-import com.ironhack.demobakingapp.model.Accounts.Account;
 import com.ironhack.demobakingapp.model.Movement;
 import com.ironhack.demobakingapp.repository.Accounts.AccountRepository;
 import com.ironhack.demobakingapp.repository.MovementRepository;
-import org.apache.catalina.authenticator.SpnegoAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +19,6 @@ public class FraudConditionsService {
     @Autowired
     AccountRepository accountRepository;
 
-   /** Transactions made in 24 hours that total to more than 150% of the customers highest daily total transactions in any other 24 hour period. **/
    /** More than 2 transactions occurring on a single account within a 1 second period. **/
 
    public boolean fraudConditionSeconds(MovementDTO movementDTO){
@@ -48,7 +38,9 @@ public class FraudConditionsService {
     }
    }
 
-   public boolean fraudConditionMaxMoney(MovementDTO movementDTO){
+    /** Transactions made in 24 hours that total to more than 150% of the customers highest daily total transactions in any other 24 hour period. **/
+
+    public boolean fraudConditionMaxMoney(MovementDTO movementDTO){
 
        if (movementRepository.moneyLastDay(movementDTO.getSenderAccount()) == null ||
                movementRepository.maxMoneyOneDay(movementDTO.getSenderAccount()) == null){

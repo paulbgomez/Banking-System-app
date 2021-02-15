@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +40,7 @@ public class SavingsService implements ISavingsService {
 
     Random random = new Random();
 
+    /** Add a new savings account **/
     public Savings add(SavingsDTO savingsDTO){
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(savingsDTO.getPrimaryOwnerId());
         AccountHolder accountHolder1 = savingsDTO.getSecondaryOwnerId() != null ?
@@ -68,10 +68,16 @@ public class SavingsService implements ISavingsService {
         return savingsRepository.save(savings);
     }
 
+    /** Return all savings accounts **/
     public List<Savings> findAll(){ return savingsRepository.findAll();}
+
+    /** Find a savings account by Id **/
     public Savings findById(Long id){return savingsRepository.findById(id).get();}
+
+    /** Save a saving account **/
     public Savings save(Savings savings){return savingsRepository.save(savings);}
 
+    /** Add interest rate **/
     public void addInterestRate(Long id){
         Optional<Savings> savings = savingsRepository.findById(id);
         Integer year = Time.years(savings.get().getLastFee().toLocalDate());
@@ -86,6 +92,7 @@ public class SavingsService implements ISavingsService {
         savingsRepository.save(savings.get());
     }
 
+    /** Check balance for an admin role **/
     public BalanceDTO checkBalanceAdmin(Long id, String username){
 
     Admin admin = adminRepository.findByUsername(username);
@@ -106,6 +113,7 @@ public class SavingsService implements ISavingsService {
 
     }
 
+    /** Transform a DTO to model. For the tests **/
     public Savings transformToSavingsFromDTO(SavingsDTO savingsDTO){
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(savingsDTO.getPrimaryOwnerId());
         AccountHolder accountHolder1 = savingsDTO.getSecondaryOwnerId() != null ?

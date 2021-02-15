@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
-import com.ironhack.demobakingapp.enums.Status;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
-import org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

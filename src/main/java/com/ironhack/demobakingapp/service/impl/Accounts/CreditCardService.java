@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -33,6 +32,7 @@ public class CreditCardService implements ICreditCardService {
 
     Random random = new Random();
 
+    /** Add and save a new Credit Card **/
     public CreditCard add(CreditCardDTO creditCardDTO){
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(creditCardDTO.getPrimaryOwnerId());
         AccountHolder accountHolder1 = creditCardDTO.getSecondaryOwnerId() != null ?
@@ -62,14 +62,17 @@ public class CreditCardService implements ICreditCardService {
         return creditCardRepository.save(creditCard);
     }
 
+    /** Save a new credit card **/
     public CreditCard save(CreditCard creditCard){
         return creditCardRepository.save(creditCard);
     }
 
+    /** Find by id **/
     public CreditCard findById(Long id){
         return creditCardRepository.findById(id).get();
     }
 
+    /** Add interest rate **/
     public void addInterestRate(Long id){
         Optional<CreditCard> creditCard = creditCardRepository.findById(id);
         Integer month = Time.months(creditCard.get().getLastInterestUpdate());
@@ -84,6 +87,7 @@ public class CreditCardService implements ICreditCardService {
         creditCardRepository.save(creditCard.get());
     }
 
+    /** Transform a DTO to model. For the tests **/
     public CreditCard transformToCreditCardFromDTO(CreditCardDTO creditCardDTO){
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(creditCardDTO.getPrimaryOwnerId());
         AccountHolder accountHolder1 = creditCardDTO.getSecondaryOwnerId() != null ?

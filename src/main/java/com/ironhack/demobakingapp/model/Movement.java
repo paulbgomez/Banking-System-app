@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.model.Accounts.Account;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

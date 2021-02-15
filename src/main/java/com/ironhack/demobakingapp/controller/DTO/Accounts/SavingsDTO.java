@@ -1,9 +1,7 @@
 package com.ironhack.demobakingapp.controller.DTO.Accounts;
 
-import com.ironhack.demobakingapp.enums.Status;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;

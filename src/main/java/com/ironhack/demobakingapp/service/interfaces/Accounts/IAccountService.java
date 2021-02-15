@@ -3,8 +3,6 @@ package com.ironhack.demobakingapp.service.interfaces.Accounts;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Transferences.MovementDTO;
 import com.ironhack.demobakingapp.model.Movement;
-import org.springframework.security.core.Authentication;
-
 import java.math.BigDecimal;
 import java.util.List;
 

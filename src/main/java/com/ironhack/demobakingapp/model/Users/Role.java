@@ -1,7 +1,6 @@
 package com.ironhack.demobakingapp.model.Users;
 
 import com.ironhack.demobakingapp.enums.UserRole;
-
 import javax.persistence.*;
 
 @Entity
