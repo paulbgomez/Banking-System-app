@@ -8,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ironhack.demobakingapp.classes.Address;
 import com.ironhack.demobakingapp.controller.DTO.Users.AddressDTO;
 import com.ironhack.demobakingapp.model.Accounts.Account;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;

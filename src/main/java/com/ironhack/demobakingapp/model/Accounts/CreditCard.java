@@ -8,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;

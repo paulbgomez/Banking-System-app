@@ -22,6 +22,7 @@ public class ThirdPartyService implements IThirdPartyService {
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
 
+    /** Add a new third Party **/
     public ThirdParty add(ThirdPartyDTO thirdPartyDTO){
 
         ThirdParty thirdParty = new ThirdParty(
@@ -34,6 +35,7 @@ public class ThirdPartyService implements IThirdPartyService {
         return thirdParty;
     }
 
+    /** Find a third party by its name **/
     public ThirdParty findByName(String name){
         return thirdPartyRepository.findByName(name);
     }

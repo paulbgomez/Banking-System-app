@@ -1,7 +1,6 @@
 package com.ironhack.demobakingapp.model.Users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +28,9 @@ public class User {
     }
 
     public User(String name, String password, String username) {
-        this.name = name;
-        this.password = password;
-        this.username = username;
+        setName(name);
+        setPassword(password);
+        setUsername(username);
     }
     /** GETTERS & SETTERS **/
 

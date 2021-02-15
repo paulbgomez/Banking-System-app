@@ -4,11 +4,9 @@ import com.ironhack.demobakingapp.controller.DTO.Users.AccountHolderDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CheckingDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.CreditCardDTO;
 import com.ironhack.demobakingapp.controller.DTO.Accounts.SavingsDTO;
-import com.ironhack.demobakingapp.controller.DTO.Transferences.BalanceDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.AdminDTO;
 import com.ironhack.demobakingapp.controller.DTO.Users.ThirdPartyDTO;
 import com.ironhack.demobakingapp.enums.UserRole;
-import com.ironhack.demobakingapp.model.Accounts.Account;
 import com.ironhack.demobakingapp.model.Accounts.CreditCard;
 import com.ironhack.demobakingapp.model.Accounts.Savings;
 import com.ironhack.demobakingapp.model.Accounts.StudentChecking;
@@ -26,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -58,18 +55,22 @@ public class AdminService implements IAdminService {
     @Autowired
     private ThirdPartyService thirdPartyService;
 
+    /**Find an admin by its username **/
     public Admin findByUsername(String username){
         return adminRepository.findByUsername(username);
     }
 
+    /** Find all the admin users **/
     public List<Admin> findAll(){
         return adminRepository.findAll();
     }
 
+    /** Save a new admin **/
     public Admin save(Admin admin){
         return adminRepository.save(admin);
     }
 
+    /** Find an optional admin by its Id **/
     public Optional<Admin> findOptionalAdminById(Long id){
         return adminRepository.findById(id);
     }

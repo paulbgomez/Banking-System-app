@@ -12,6 +12,7 @@ public class MovementService implements IMovementService {
     @Autowired
     private MovementRepository movementRepository;
 
+    /** Save the movement between accounts **/
     public Movement save(Movement movement) {
         return movementRepository.save(movement);
     }

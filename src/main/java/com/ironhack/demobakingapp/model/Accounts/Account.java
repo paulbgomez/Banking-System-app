@@ -9,7 +9,6 @@ import com.ironhack.demobakingapp.classes.Money;
 import com.ironhack.demobakingapp.enums.Status;
 import com.ironhack.demobakingapp.model.Movement;
 import com.ironhack.demobakingapp.model.Users.AccountHolder;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,7 +36,7 @@ public class Account {
     @ManyToOne(optional = false)
     protected AccountHolder primaryOwner;
     @ManyToOne(optional = true)
-    protected AccountHolder secondaryOwner; //This is optional
+    protected AccountHolder secondaryOwner;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)

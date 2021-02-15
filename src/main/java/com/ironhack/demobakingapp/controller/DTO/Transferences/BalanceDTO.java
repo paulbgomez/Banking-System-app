@@ -10,12 +10,10 @@ public class BalanceDTO {
     /** PARAMS **/
 
     @NotNull
-    @NotEmpty
     private Long accountId;
-    @NotEmpty
     @NotNull
     private BigDecimal balanceAmount;
-    @NotEmpty
+    @NotNull
     private Currency balanceCurrency;
 
     /** CONSTRUCTORS **/
@@ -23,7 +21,7 @@ public class BalanceDTO {
     public BalanceDTO() {
     }
 
-    public BalanceDTO(@NotNull @NotEmpty Long accountId, @NotEmpty @NotNull BigDecimal balanceAmount, @NotEmpty Currency balanceCurrency) {
+    public BalanceDTO(@NotNull Long accountId, @NotNull BigDecimal balanceAmount, @NotNull Currency balanceCurrency) {
         setAccountId(accountId);
         setBalanceAmount(balanceAmount);
         setBalanceCurrency(balanceCurrency);

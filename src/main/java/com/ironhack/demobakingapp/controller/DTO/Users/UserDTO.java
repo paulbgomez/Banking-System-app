@@ -2,7 +2,6 @@ package com.ironhack.demobakingapp.controller.DTO.Users;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
