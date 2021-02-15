@@ -63,7 +63,7 @@ CREATE TABLE `account` (
   primary_owner_id BIGINT NOT NULL,
   secondary_owner_id BIGINT,
   is_frozen BOOLEAN,
-    `status` VARCHAR(255),
+  `status` VARCHAR(255),
   PRIMARY KEY (id),
   FOREIGN KEY (secondary_owner_id) REFERENCES account_holder (id),
   FOREIGN KEY (primary_owner_id) REFERENCES account_holder (id)
@@ -126,4 +126,7 @@ CREATE TABLE movement (
   FOREIGN KEY (receiver_account) REFERENCES account (id)
 );
 
-
+-- Pre-defined default admin username/password is admin/1234 (the password is hashed in the DB). Use it for testing purposes.
+INSERT INTO user (id, name, password, username) VALUES (1, "NAME", "$2a$10$RFb9IXjhOrYv2OrjE5ru0OOv65OxN7NXB83abFOMfqENWw4Id.k3q", "admin");
+INSERT INTO role (user_role, user_id) VALUES ("ADMIN", 1);
+INSERT INTO admin (id) VALUES (1);
