@@ -6,7 +6,10 @@ Banking-System backend
 1. Clone the repo in your own computer, or download a zip with the project.
 2. Fill /src/main/resources/application.properties with your data (database, user and password).
 3. A .sql file is provided if you need to create the necessary tables in your system.
-4. Run the program with ```ruby mvn spring-boot:run ```
+4. Run the program with 
+```ruby 
+mvn spring-boot:run 
+```
 
 5. An admin user is provided to allow modifcactions on the database (username: admin | password: 1234)
 
